@@ -1,0 +1,2 @@
+rootProject.name='BillSplitingApp'
+include ':app'
