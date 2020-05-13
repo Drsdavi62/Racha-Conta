@@ -101,7 +101,10 @@ class ProductListFragment : Fragment() {
 
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
 
-            val priceList = productList.map { it.price }
+            var priceList : MutableList<Float> = ArrayList()
+            productList.forEach {
+                priceList.add(it.price * it.amount)
+            }
             totalValue.text = String.format("%.2f", priceList.sum())
             val relationList = viewModel.getRelations(productList)
 
@@ -121,11 +124,13 @@ class ProductListFragment : Fragment() {
                     )
                     newProductDialog.nameStr = adapter.productList[position].name
                     newProductDialog.priceFloat = adapter.productList[position].price
+                    newProductDialog.amountInt = adapter.productList[position].amount
                     newProductDialog.show(View.OnClickListener {
                         viewModel.editProduct(
                             adapter.productList[position].id,
                             newProductDialog.nameStr!!,
                             newProductDialog.priceFloat!!,
+                            newProductDialog.amountInt!!,
                             newProductDialog.getSelected()
                         )
                         activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
@@ -156,7 +161,7 @@ class ProductListFragment : Fragment() {
         val newProductDialog = NewProductDialog(activity!!, viewModel.getPersonList())
         newProductDialog.show(View.OnClickListener {
             val product =
-                ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!)
+                ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!, newProductDialog.amountInt!!)
             viewModel.insertProduct(product, newProductDialog.getSelected())
             activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             newProductDialog.dismiss()

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="5dp">
+    android:layout_marginVertical="5dp"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,23 +47,33 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/divisor"
                 android:layout_width="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_height="1dp"
-                android:layout_marginEnd="30dp"
                 android:layout_marginStart="30dp"
-                android:backgroundTint="#A3A1A1"/>
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="#A3A1A1"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/item_people"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="5dp"
                 android:maxWidth="100dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_product_amount"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divisor" />
+
+            <TextView
+                android:id="@+id/item_product_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisor" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

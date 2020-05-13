@@ -30,7 +30,8 @@ class PersonListViewModel(application: Application) : AndroidViewModel(applicati
 
     fun deletePerson(id : Integer){
         relationRepository.getProductsRelated(id).forEach {productId ->
-            var value = productRepository.getProduct(productId).price / (relationRepository.getPeopleRelated(productId).size - 1).toFloat()
+            val product = productRepository.getProduct(productId)
+            var value = (product.price * product.amount)/ (relationRepository.getPeopleRelated(productId).size - 1).toFloat()
             relationRepository.setRelationValue(productId, value)
         }
         relationRepository.deleteByPerson(id)

@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.application.billsplitingapp.models.ProductModel
 
-@Database(entities = [ProductModel::class], version = 1, exportSchema = false)
+@Database(entities = [ProductModel::class], version = 2, exportSchema = false)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao() : ProductDao
 
@@ -27,7 +27,7 @@ abstract class ProductDatabase : RoomDatabase() {
                     context.applicationContext,
                     ProductDatabase::class.java,
                     "Product-database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 return instance
             }

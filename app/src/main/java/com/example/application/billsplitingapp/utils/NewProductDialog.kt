@@ -13,6 +13,7 @@ import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.models.PersonModel
 import com.google.android.material.button.MaterialButton
 import me.abhinay.input.CurrencyEditText
+import org.jetbrains.anko.find
 import java.text.DecimalFormat
 
 class NewProductDialog (private val context: Context, val list : List<PersonModel>) {
@@ -37,6 +38,7 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
 
     var name : EditText? = null
     var price : CurrencyEditText? = null
+    var amount : EditText? = null
     private val factory: LayoutInflater = LayoutInflater.from(context)
     private val dialogView: View = factory.inflate(R.layout.dialog, null)
     private val alertDialog : AlertDialog = AlertDialog.Builder(context).setTitle(context.getString(
@@ -49,6 +51,7 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
         alertDialog.setView(dialogView)
         name = dialogView.findViewById<EditText>(R.id.dialog_product_name)
         price = dialogView.findViewById<CurrencyEditText>(R.id.dialog_product_price)
+        amount = dialogView.findViewById(R.id.dialog_product_amount)
         recyclerView = dialogView.findViewById(R.id.dialog_recycler)
         personLayout = dialogView.findViewById(R.id.dialog_person_layout)
         if(list.isNotEmpty()) {
@@ -68,6 +71,18 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         alertDialog.show()
     }
+
+    var amountInt : Int?
+        get() {
+            return if(amount!!.text.toString().isNotEmpty()) {
+                amount!!.text.toString().toInt()
+            } else {
+                1
+            }
+        }
+        set(value){
+            amount!!.setText(value.toString())
+        }
 
     var nameStr: String?
         get() = name?.text.toString().trim { it <= ' ' }

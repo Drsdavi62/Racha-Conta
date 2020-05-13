@@ -29,18 +29,18 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
             val finalProduct = productRepository.getLastProduct()
             if(idList.isNotEmpty()) {
                 idList.forEach {
-                    relationRepository.insertRelation(finalProduct.id, it, product.price / idList.size)
+                    relationRepository.insertRelation(finalProduct.id, it, (product.price * product.amount) / idList.size)
                 }
             }
         }
     }
 
-    fun editProduct(id: Integer, name: String, price: Float, relationList: List<Integer>){
+    fun editProduct(id: Integer, name: String, price: Float, amount : Int, relationList: List<Integer>){
         CoroutineScope(Dispatchers.IO).launch {
-            productRepository.editProduct(id, name, price)
+            productRepository.editProduct(id, name, price, amount)
             relationRepository.deleteByProduct(id)
             relationList.forEach{
-                relationRepository.insertRelation(id, it, price / relationList.size)
+                relationRepository.insertRelation(id, it, (price * amount) / relationList.size)
             }
         }
     }

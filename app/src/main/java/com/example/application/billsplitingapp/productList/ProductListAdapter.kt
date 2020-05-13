@@ -53,6 +53,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, private v
         personList.sortBy { it.id.toInt() }
         val names = personList.map { it.name }
         holder.people.text = names.joinToString (", ")
+        holder.amount.text = productList[position].amount.toString()
     }
 
     fun updateList(newList : List<ProductModel>, relationList: List<List<PersonModel>>){
@@ -69,6 +70,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, private v
         var name: TextView = itemView.product_name
         var price: TextView = itemView.product_price
         var people : TextView = itemView.item_people
+        var amount : TextView = itemView.item_product_amount
 
         init{
             itemView.setOnClickListener{

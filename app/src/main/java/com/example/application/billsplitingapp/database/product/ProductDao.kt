@@ -19,8 +19,8 @@ interface ProductDao {
     @Query("DELETE FROM ProductModel WHERE id = :id")
     suspend fun deleteProduct(id: java.lang.Integer)
 
-    @Query("UPDATE ProductModel SET name = :name, price =:price WHERE id = :id")
-    suspend fun editProduct(id: java.lang.Integer, name: String, price: Float)
+    @Query("UPDATE ProductModel SET name = :name, price =:price, amount = :amount WHERE id = :id")
+    suspend fun editProduct(id: java.lang.Integer, name: String, price: Float, amount : Int)
 
     @Query("UPDATE ProductModel SET name = :name WHERE id = :id")
     suspend fun editProductName(id : Int, name : String)

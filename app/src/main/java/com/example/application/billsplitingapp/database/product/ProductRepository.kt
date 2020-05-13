@@ -22,8 +22,8 @@ class ProductRepository (private val context: Context){
         productDao.add(productModel)
     }
 
-    suspend fun editProduct(id: Integer, name: String, price: Float){
-        productDao.editProduct(id, name, price)
+    suspend fun editProduct(id: Integer, name: String, price: Float, amount : Int){
+        productDao.editProduct(id, name, price, amount)
     }
 
     fun getList() : LiveData<List<ProductModel>>{
