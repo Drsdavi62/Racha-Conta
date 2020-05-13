@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/productListFragment">
 
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.application.billsplitingapp.productList.ProductListFragment"
+        android:label="product_list_fragment"
+        tools:layout="@layout/product_list_fragment" >
+        <action
+            android:id="@+id/action_productListFragment_to_personListFragment"
+            app:destination="@id/personListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/personListFragment"
+        android:name="com.example.application.billsplitingapp.peopleList.PersonListFragment"
+        android:label="people_list_fragment"
+        tools:layout="@layout/people_list_fragment" >
+        <action
+            android:id="@+id/action_personListFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
+        <action
+            android:id="@+id/action_personListFragment_self"
+            app:destination="@id/personListFragment" />
+    </fragment>
 </navigation>

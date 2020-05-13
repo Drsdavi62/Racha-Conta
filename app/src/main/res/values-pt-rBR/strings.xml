@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BillSplitingApp</string>
+
+    <!-- Product dialog -->
+    <string name="product_dialog_name_hint">Nome do produto</string>
+    <string name="product_dialog_price_hint">Preço</string>
+    <string name="product_dialog_recycler_title">Selecione quem irá dividir:</string>
+    <string name="product_dialog_title">Detalhes do produto</string>
+    <string name="confirm_button">Confirmar</string>
+
+    <!-- Person dialog -->
+    <string name="person_dialog_edit_title">Editar</string>
+    <string name="dialog_person_new_title">Nova pessoa</string>
+    <string name="ok">ok</string>
+
+    <!-- Menus -->
+    <string name="bottom_view_menu_products">Produtos</string>
+    <string name="bottom_view_menu_people">Pessoas</string>
+    <string name="menu_delete">Excluir</string>
+    <string name="menu_add">Adicionar</string>
+
+
+
+</resources>
