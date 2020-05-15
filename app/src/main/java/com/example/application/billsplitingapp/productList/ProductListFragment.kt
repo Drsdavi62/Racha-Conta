@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -21,9 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.application.billsplitingapp.R
+import com.example.application.billsplitingapp.SharedViewModel
+import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.utils.NewProductDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlin.math.abs
 
 class ProductListFragment : Fragment() {
 
@@ -32,15 +38,21 @@ class ProductListFragment : Fragment() {
     }
 
     private lateinit var viewModel: ProductListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProductListAdapter
     private var deletionMode = false
     private lateinit var totalValue: TextView
 
+    private var productList : List<ProductModel> = ArrayList()
+    private var relationList : List<List<PersonModel>> = ArrayList()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //val factory = ProductFactory(activity?.application!!)
         viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -91,7 +103,7 @@ class ProductListFragment : Fragment() {
         addItem.isVisible = !deletionMode
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         totalValue = view.findViewById(R.id.product_total_value)
@@ -99,14 +111,18 @@ class ProductListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         recyclerView.hasFixedSize()
 
-        viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
+       // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
+       sharedViewModel.productList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
 
+        sharedViewModel.observeList.observe(viewLifecycleOwner, Observer { productList ->
+            this.productList = productList
             var priceList : MutableList<Float> = ArrayList()
             productList.forEach {
                 priceList.add(it.price * it.amount)
             }
             totalValue.text = String.format("%.2f", priceList.sum())
-            val relationList = viewModel.getRelations(productList)
+            val rList = viewModel.getRelations(productList)
+            relationList = rList
 
             if (!this::adapter.isInitialized) {
                 adapter = ProductListAdapter(productList as MutableList<ProductModel>, relationList)
@@ -152,6 +168,10 @@ class ProductListFragment : Fragment() {
                 override fun returnMode() {
                     deletionMode = false
                     ActivityCompat.invalidateOptionsMenu(activity!!)
+                }
+
+                override fun onAddClick(position: Int) {
+                    viewModel.addAmount(adapter.productList[position], adapter.relationList[position])
                 }
             })
         })

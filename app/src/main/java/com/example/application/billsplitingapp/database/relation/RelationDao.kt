@@ -1,14 +1,19 @@
 package com.example.application.billsplitingapp.database.relation
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.models.RelationModel
 
 @Dao
 interface RelationDao {
     @Insert
     suspend fun insertRelation(relationModel: RelationModel) : Long
+
+    @Query("SELECT * FROM RelationModel")
+    fun getRelationList() : LiveData<List<RelationModel>>
 
     @Query("DELETE FROM RelationModel WHERE productId =:productId")
     suspend fun deleteByProduct(productId: java.lang.Integer)

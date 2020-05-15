@@ -7,6 +7,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -18,7 +19,7 @@ import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import kotlinx.android.synthetic.main.item_product.view.*
 
-class ProductListAdapter (val productList : MutableList<ProductModel>, private var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter (val productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     lateinit var listener : OnItemClickListener
     private var selectionMode = false
@@ -30,6 +31,8 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, private v
         fun onHold(itemView: View)
 
         fun returnMode()
+
+        fun onAddClick(position: Int)
     }
 
     fun setOnItemClickListener(listener : OnItemClickListener){
@@ -54,6 +57,9 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, private v
         val names = personList.map { it.name }
         holder.people.text = names.joinToString (", ")
         holder.amount.text = productList[position].amount.toString()
+        holder.addBtn.setOnClickListener{
+            listener.onAddClick(position)
+        }
     }
 
     fun updateList(newList : List<ProductModel>, relationList: List<List<PersonModel>>){
@@ -71,6 +77,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, private v
         var price: TextView = itemView.product_price
         var people : TextView = itemView.item_people
         var amount : TextView = itemView.item_product_amount
+        var addBtn : ImageButton = itemView.product_add_button
 
         init{
             itemView.setOnClickListener{

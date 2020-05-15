@@ -11,18 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.application.billsplitingapp.R
+import com.example.application.billsplitingapp.SharedViewModel
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.utils.InputDialog
 
 class PersonListFragment : Fragment() {
 
     private lateinit var viewModel: PersonListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PersonListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(PersonListViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         viewModel.setUp()
     }
 
@@ -83,6 +86,7 @@ class PersonListFragment : Fragment() {
                 }
                 override fun onDeleteClick(position: Int) {
                     viewModel.deletePerson(adapter.list[position].id)
+                    sharedViewModel.setup()
                 }
             })
         })

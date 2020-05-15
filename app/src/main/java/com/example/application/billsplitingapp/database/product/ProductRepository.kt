@@ -18,12 +18,22 @@ class ProductRepository (private val context: Context){
         productDao = database.productDao()
     }
 
+    fun getRawList() = runBlocking {
+        return@runBlocking productDao.getRawList()
+    }
+
     suspend fun insertProduct(productModel: ProductModel){
         productDao.add(productModel)
     }
 
     suspend fun editProduct(id: Integer, name: String, price: Float, amount : Int){
         productDao.editProduct(id, name, price, amount)
+    }
+
+    fun addAmount(id : Integer){
+        CoroutineScope(Dispatchers.IO).launch {
+            productDao.addAmount(id)
+        }
     }
 
     fun getList() : LiveData<List<ProductModel>>{

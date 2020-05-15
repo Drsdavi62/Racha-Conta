@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.productList
 
 import android.app.Application
+import androidx.annotation.IntegerRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.application.billsplitingapp.database.person.PersonRepository
@@ -49,13 +50,9 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         return personRepository.getRawList()
     }
 
-    fun addRelation(idList : List<Integer>){
-        CoroutineScope(Dispatchers.IO).launch {
-            val product = productRepository.getLastProduct()
-            idList.forEach {
-                relationRepository.insertRelation(product.id, it, product.price / idList.size)
-            }
-        }
+    fun addAmount(product : ProductModel, relationList : List<PersonModel>){
+        relationRepository.setRelationValue(product.id, (product.price * (product.amount + 1)) / relationList.size)
+        productRepository.addAmount(product.id)
     }
 
     fun getRelations(productList : List<ProductModel>) : List<List<PersonModel>>{

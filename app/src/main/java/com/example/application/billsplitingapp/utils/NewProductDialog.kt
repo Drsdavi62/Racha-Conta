@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.NumberPicker
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +39,7 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
 
     var name : EditText? = null
     var price : CurrencyEditText? = null
-    var amount : EditText? = null
+    lateinit var amount : NumberPicker
     private val factory: LayoutInflater = LayoutInflater.from(context)
     private val dialogView: View = factory.inflate(R.layout.dialog, null)
     private val alertDialog : AlertDialog = AlertDialog.Builder(context).setTitle(context.getString(
@@ -51,7 +52,10 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
         alertDialog.setView(dialogView)
         name = dialogView.findViewById<EditText>(R.id.dialog_product_name)
         price = dialogView.findViewById<CurrencyEditText>(R.id.dialog_product_price)
-        amount = dialogView.findViewById(R.id.dialog_product_amount)
+        amount = dialogView.findViewById(R.id.dialog_np)
+        amount.minValue = 1
+        amount.maxValue = 99
+        amount.wrapSelectorWheel = true
         recyclerView = dialogView.findViewById(R.id.dialog_recycler)
         personLayout = dialogView.findViewById(R.id.dialog_person_layout)
         if(list.isNotEmpty()) {
@@ -74,14 +78,12 @@ class NewProductDialog (private val context: Context, val list : List<PersonMode
 
     var amountInt : Int?
         get() {
-            return if(amount!!.text.toString().isNotEmpty()) {
-                amount!!.text.toString().toInt()
-            } else {
-                1
-            }
+            return amount!!.value
         }
         set(value){
-            amount!!.setText(value.toString())
+            if (value != null) {
+                amount!!.value = value
+            }
         }
 
     var nameStr: String?

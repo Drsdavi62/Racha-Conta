@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.database.relation
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.example.application.billsplitingapp.models.RelationModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,10 @@ class RelationRepository(private val context: Context) {
     init {
         val database = RelationDatabase.getDatabase(context)
         dao = database.relationDao()
+    }
+
+    fun getList() : LiveData<List<RelationModel>>{
+        return dao.getRelationList()
     }
 
     suspend fun insertRelation(productId: Integer, personId: Integer, value: Float) {

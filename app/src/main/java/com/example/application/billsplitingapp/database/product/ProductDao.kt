@@ -16,11 +16,17 @@ interface ProductDao {
     @Query("SELECT * FROM ProductModel")
     fun getProductList() : LiveData<List<ProductModel>>
 
+    @Query("SELECT * FROM ProductModel")
+    suspend fun getRawList() : List<ProductModel>
+
     @Query("DELETE FROM ProductModel WHERE id = :id")
     suspend fun deleteProduct(id: java.lang.Integer)
 
     @Query("UPDATE ProductModel SET name = :name, price =:price, amount = :amount WHERE id = :id")
     suspend fun editProduct(id: java.lang.Integer, name: String, price: Float, amount : Int)
+
+    @Query("UPDATE ProductModel SET amount = amount + 1 WHERE id = :id")
+    suspend fun addAmount(id : Integer)
 
     @Query("UPDATE ProductModel SET name = :name WHERE id = :id")
     suspend fun editProductName(id : Int, name : String)
