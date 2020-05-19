@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginVertical="3dp"
-            android:text="Total Value"
+            android:text="@string/total_value_title"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -51,7 +51,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:layout_marginVertical="3dp"
-            android:text="0,00"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

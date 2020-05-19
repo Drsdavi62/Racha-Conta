@@ -7,23 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <fragment
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:id="@+id/products_fragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_nav_graph"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"/>
-
-<!--    <fragment-->
-<!--        android:name="androidx.navigation.fragment.NavHostFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:id="@+id/products_fragment"-->
-<!--        app:defaultNavHost="true"-->
-<!--        app:navGraph="@navigation/main_nav_graph"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view">-->
-<!--    </fragment>-->
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view">
+    </fragment>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

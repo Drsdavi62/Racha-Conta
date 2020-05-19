@@ -1,23 +1,23 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.billsplitingapp.R
-import com.example.application.billsplitingapp.database.relation.RelationRepository
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
+import com.example.application.billsplitingapp.utils.Formatter
 import kotlinx.android.synthetic.main.item_product.view.*
+import kotlin.math.abs
+
 
 class ProductListAdapter (val productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
@@ -51,7 +51,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = productList[position].name
-        holder.price.text = String.format("%.2f", productList[position].price)
+        holder.price.text = Formatter.currencyFormat(productList[position].price)
         val personList = relationList[position] as MutableList
         personList.sortBy { it.id.toInt() }
         val names = personList.map { it.name }

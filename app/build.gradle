@@ -60,7 +60,5 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.5"
 
 
-    implementation "androidx.paging:paging-runtime:2.1.0"
-
-    implementation 'me.abhinay.input:currency-edittext:1.1'
+    implementation "androidx.preference:preference-ktx:1.1.0"
 }

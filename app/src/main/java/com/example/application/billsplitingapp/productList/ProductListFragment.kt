@@ -1,35 +1,24 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
+import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.preference.PreferenceManager
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.application.billsplitingapp.R
-import com.example.application.billsplitingapp.SharedViewModel
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
-import com.example.application.billsplitingapp.utils.NewProductDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlin.math.abs
+import com.example.application.billsplitingapp.utils.Formatter
+import com.example.application.billsplitingapp.newProductDialog.NewProductDialog
 
 class ProductListFragment : Fragment() {
 
@@ -38,7 +27,6 @@ class ProductListFragment : Fragment() {
     }
 
     private lateinit var viewModel: ProductListViewModel
-    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProductListAdapter
     private var deletionMode = false
@@ -47,12 +35,13 @@ class ProductListFragment : Fragment() {
     private var productList : List<ProductModel> = ArrayList()
     private var relationList : List<List<PersonModel>> = ArrayList()
 
+    private lateinit var prefs : SharedPreferences
+    private lateinit var editor : SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //val factory = ProductFactory(activity?.application!!)
         viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -106,21 +95,29 @@ class ProductListFragment : Fragment() {
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        prefs = PreferenceManager.getDefaultSharedPreferences(activity!!)
+        editor = prefs.edit()
         totalValue = view.findViewById(R.id.product_total_value)
         recyclerView = view.findViewById(R.id.product_recycler)
         recyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         recyclerView.hasFixedSize()
+        totalValue.text = Formatter.currencyFormat(prefs.getFloat("total", 0f))
 
-       // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
-       sharedViewModel.productList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
 
-        sharedViewModel.observeList.observe(viewLifecycleOwner, Observer { productList ->
+        // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
+
+        viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
             this.productList = productList
             var priceList : MutableList<Float> = ArrayList()
             productList.forEach {
                 priceList.add(it.price * it.amount)
             }
-            totalValue.text = String.format("%.2f", priceList.sum())
+            if(priceList.sum() != prefs.getFloat("total", 0f)) {
+                editor.putFloat("total", priceList.sum())
+                editor.apply()
+                totalValue.text = Formatter.currencyFormat(prefs.getFloat("total", 0f))
+            }
+
             val rList = viewModel.getRelations(productList)
             relationList = rList
 
@@ -134,10 +131,11 @@ class ProductListFragment : Fragment() {
 
             adapter.setOnItemClickListener(object : ProductListAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
-                    val newProductDialog = NewProductDialog(
-                        activity!!, viewModel.getPersonList(),
-                        viewModel.getOneRelation(adapter.productList[position].id) as MutableList<Integer>
-                    )
+                    val newProductDialog =
+                        NewProductDialog(
+                            activity!!, viewModel.getPersonList(),
+                            viewModel.getOneRelation(adapter.productList[position].id) as MutableList<Integer>
+                        )
                     newProductDialog.nameStr = adapter.productList[position].name
                     newProductDialog.priceFloat = adapter.productList[position].price
                     newProductDialog.amountInt = adapter.productList[position].amount
@@ -173,12 +171,17 @@ class ProductListFragment : Fragment() {
                 override fun onAddClick(position: Int) {
                     viewModel.addAmount(adapter.productList[position], adapter.relationList[position])
                 }
+
             })
         })
     }
 
     private fun addProduct(){
-        val newProductDialog = NewProductDialog(activity!!, viewModel.getPersonList())
+        val newProductDialog =
+            NewProductDialog(
+                activity!!,
+                viewModel.getPersonList()
+            )
         newProductDialog.show(View.OnClickListener {
             val product =
                 ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!, newProductDialog.amountInt!!)

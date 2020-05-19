@@ -19,4 +19,6 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_add">Add</string>
 
+    <string name="total_value_title">Total Value</string>
+
 </resources>

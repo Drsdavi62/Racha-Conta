@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.utils
+package com.example.application.billsplitingapp.newProductDialog
 
 import android.view.LayoutInflater
 import android.view.View
@@ -21,16 +21,18 @@ class ProductDialogAdapter(var list: List<PersonModel>, var selectedId: MutableL
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ProductDialogAdapter.ViewHolder {
+    ): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_dialog, parent, false)
-        return ProductDialogAdapter.ViewHolder(view)
+        return ViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    override fun onBindViewHolder(holder: ProductDialogAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = list[position].name
 
         if(selectedId!!.contains(list[position].id)){

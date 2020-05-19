@@ -20,6 +20,9 @@
     <string name="menu_delete">Excluir</string>
     <string name="menu_add">Adicionar</string>
 
+    <string name="total_value_title">Valor total</string>
+
+
 
 
 </resources>
