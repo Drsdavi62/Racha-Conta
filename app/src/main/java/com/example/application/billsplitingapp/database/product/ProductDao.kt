@@ -13,11 +13,11 @@ interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(product: ProductModel) : Long
 
-    @Query("SELECT * FROM ProductModel")
-    fun getProductList() : LiveData<List<ProductModel>>
+    @Query("SELECT * FROM ProductModel where billId = :billId")
+    fun getProductList(billId : Int) : LiveData<List<ProductModel>>
 
-    @Query("SELECT * FROM ProductModel")
-    suspend fun getRawList() : List<ProductModel>
+    @Query("SELECT * FROM ProductModel where billId = :billId")
+    suspend fun getRawList(billId : Int) : List<ProductModel>
 
     @Query("DELETE FROM ProductModel WHERE id = :id")
     suspend fun deleteProduct(id: java.lang.Integer)

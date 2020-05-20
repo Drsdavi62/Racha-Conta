@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class PersonModel (var name : String, var value : Float, var billId : Int){
+class BillModel (var name : String, var date : String){
     @PrimaryKey(autoGenerate = true)
-    lateinit var id : Integer
+    var id : Int = 0
 }

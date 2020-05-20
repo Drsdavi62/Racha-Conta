@@ -1,22 +1,24 @@
-package com.example.application.billsplitingapp.database.product
+package com.example.application.billsplitingapp.database.bill
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.application.billsplitingapp.models.ProductModel
+import com.example.application.billsplitingapp.models.BillModel
 
-@Database(entities = [ProductModel::class], version = 3, exportSchema = false)
-abstract class ProductDatabase : RoomDatabase() {
-    abstract fun productDao() : ProductDao
+
+@Database(entities = [BillModel::class], version = 1, exportSchema = false)
+abstract class BillDatabase : RoomDatabase(){
+
+    abstract fun billDao() : BillDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
         // same time.
         @Volatile
-        private var INSTANCE: ProductDatabase? = null
+        private var INSTANCE: BillDatabase? = null
 
-        fun getDatabase(context: Context): ProductDatabase {
+        fun getDatabase(context: Context): BillDatabase {
             val tempInstance =
                 INSTANCE
             if (tempInstance != null) {
@@ -25,8 +27,8 @@ abstract class ProductDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    ProductDatabase::class.java,
-                    "Product-database"
+                    BillDatabase::class.java,
+                    "Bill-database"
                 ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 return instance

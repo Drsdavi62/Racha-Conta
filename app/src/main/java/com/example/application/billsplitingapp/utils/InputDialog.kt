@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.text.InputType
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -31,8 +32,8 @@ class InputDialog(private val mContext: Context, title: String?) {
         mBuilder.setTitle(title)
     }
 
-    fun show(listener: DialogInterface.OnClickListener?) {
-        mBuilder.setPositiveButton(mContext.resources.getString(R.string.ok), listener)
+    fun show(listener: View.OnClickListener) {
+        mBuilder.setPositiveButton(mContext.resources.getString(R.string.ok), null)
         mDialog = mBuilder.create()
         mEditText.requestFocus()
         try {
@@ -41,9 +42,15 @@ class InputDialog(private val mContext: Context, title: String?) {
         } catch (e: Exception) {
         }
         mDialog.show()
+        val btn = mDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        btn.setOnClickListener(listener)
     }
 
-    var editText: String?
+    fun dismiss(){
+        mDialog.dismiss()
+    }
+
+    var editText: String
         get() = mEditText.text.toString().trim { it <= ' ' }
         set(text) {
             mEditText.setText(text)

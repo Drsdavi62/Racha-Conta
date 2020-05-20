@@ -17,7 +17,7 @@ class RelationRepository(private val context: Context) {
         dao = database.relationDao()
     }
 
-    fun getList() : LiveData<List<RelationModel>>{
+    fun getList(): LiveData<List<RelationModel>> {
         return dao.getRelationList()
     }
 
@@ -29,34 +29,28 @@ class RelationRepository(private val context: Context) {
         dao.deleteByProduct(productId)
     }
 
-    fun deleteByPerson(personId: Integer) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.deleteByPerson(personId)
-        }
+    suspend fun deleteByPerson(personId: Integer) {
+        dao.deleteByPerson(personId)
     }
 
-    fun deleteSpecific(productId: Int, personId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.deleteSpecific(productId, personId)
-        }
+    suspend fun deleteSpecific(productId: Int, personId: Int) {
+        dao.deleteSpecific(productId, personId)
     }
 
-    fun setRelationValue(productId: Integer, value: Float) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.setRelationValue(productId.toInt(), value)
-        }
+    suspend fun setRelationValue(productId: Integer, value: Float) {
+        dao.setRelationValue(productId.toInt(), value)
     }
 
-    fun getProductsRelated(personId: Integer) = runBlocking {
-        return@runBlocking dao.getProductsRelated(personId)
+    suspend fun getProductsRelated(personId: Integer): List<Integer> {
+        return dao.getProductsRelated(personId)
     }
 
-    fun getPeopleRelated(productId: Integer): List<Int> = runBlocking {
-        return@runBlocking dao.getPeopleRelated(productId)
+    suspend fun getPeopleRelated(productId: Integer): List<Int>  {
+        return dao.getPeopleRelated(productId)
     }
 
-    fun getRelationValue(personId: Integer): List<Float> = runBlocking {
-        return@runBlocking dao.getRelationValue(personId)
+    suspend fun getRelationValue(personId: Integer): List<Float>  {
+        return dao.getRelationValue(personId)
     }
 
 }

@@ -12,6 +12,7 @@
     <!-- Person dialog -->
     <string name="person_dialog_edit_title">Editar</string>
     <string name="dialog_person_new_title">Nova pessoa</string>
+    <string name="empty_name_toast">O nome da pessoa não pode ser vazio</string>
     <string name="ok">ok</string>
 
     <!-- Menus -->
@@ -21,8 +22,7 @@
     <string name="menu_add">Adicionar</string>
 
     <string name="total_value_title">Valor total</string>
-
-
-
+    <string name="empty_person_list">Nenhuma pessoa registrada</string>
+    <string name="empty_product_list">Nenhum produto registrado</string>
 
 </resources>

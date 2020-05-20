@@ -12,17 +12,17 @@ interface PersonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(person: PersonModel) : Long
 
-    @Query("SELECT * FROM PersonModel")
-    fun getPersonList() : LiveData<List<PersonModel>>
+    @Query("SELECT * FROM PersonModel where billId = :billId")
+    fun getPersonList(billId : Int) : LiveData<List<PersonModel>>
 
-    @Query("SELECT * FROM PersonModel")
-    suspend fun getRawPersonList() : List<PersonModel>
+    @Query("SELECT * FROM PersonModel where billId = :billId")
+    suspend fun getRawPersonList(billId : Int) : List<PersonModel>
 
     @Query("DELETE FROM PersonModel WHERE id = :id")
     suspend fun deletePerson(id: Integer)
 
     @Query("UPDATE PersonModel SET name = :name WHERE id = :id")
-    fun editPersonName(id: Integer, name: String)
+    suspend fun editPersonName(id: Integer, name: String)
 
     @Query("UPDATE PersonModel SET value =:value WHERE id =:id")
     suspend fun setValue(value: Float, id: Integer)

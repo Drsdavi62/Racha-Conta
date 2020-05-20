@@ -9,48 +9,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProductRepository (private val context: Context){
+class ProductRepository(private val context: Context) {
 
-    private val productDao : ProductDao
+    private val productDao: ProductDao
 
-    init{
+    init {
         val database = ProductDatabase.getDatabase(context)
         productDao = database.productDao()
     }
 
-    fun getRawList() = runBlocking {
-        return@runBlocking productDao.getRawList()
-    }
-
-    suspend fun insertProduct(productModel: ProductModel){
+    suspend fun insertProduct(productModel: ProductModel) {
         productDao.add(productModel)
     }
 
-    suspend fun editProduct(id: Integer, name: String, price: Float, amount : Int){
+    suspend fun editProduct(id: Integer, name: String, price: Float, amount: Int) {
         productDao.editProduct(id, name, price, amount)
     }
 
-    fun addAmount(id : Integer){
-        CoroutineScope(Dispatchers.IO).launch {
-            productDao.addAmount(id)
-        }
+    suspend fun addAmount(id: Integer) {
+        productDao.addAmount(id)
     }
 
-    fun getList() : LiveData<List<ProductModel>>{
-        return productDao.getProductList()
+    fun getList(billId: Int): LiveData<List<ProductModel>> {
+        return productDao.getProductList(billId)
     }
 
-    fun getProduct(id : Integer) = runBlocking {
-        return@runBlocking productDao.getProduct(id.toInt())
+    suspend fun getProduct(id: Integer): ProductModel {
+        return productDao.getProduct(id.toInt())
     }
 
-    fun deleteProduct(id : Integer){
-        CoroutineScope(Dispatchers.IO).launch {
-            productDao.deleteProduct(id)
-        }
+    suspend fun deleteProduct(id: Integer) {
+        productDao.deleteProduct(id)
     }
 
-    suspend fun getLastProduct() : ProductModel {
+    suspend fun getLastProduct(): ProductModel {
         return productDao.getLastProduct()
     }
 }

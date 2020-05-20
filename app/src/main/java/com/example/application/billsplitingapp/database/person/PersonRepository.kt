@@ -8,46 +8,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class PersonRepository (private val context: Context){
+class PersonRepository(private val context: Context) {
 
-    private val personDao : PersonDao
+    private val personDao: PersonDao
 
-    init{
+    init {
         val database = PersonDatabase.getDatabase(context)
         personDao = database.personDao()
     }
 
-    suspend fun insertPerson(name : String, value : Float){
-        personDao.add(PersonModel(name, value))
+    suspend fun insertPerson(name: String, value: Float, billId: Int) {
+        personDao.add(PersonModel(name, value, billId))
     }
 
-    fun getList() : LiveData<List<PersonModel>> {
-        return personDao.getPersonList()
+    fun getList(billId: Int): LiveData<List<PersonModel>> {
+        return personDao.getPersonList(billId)
     }
 
-    fun getRawList() = runBlocking {
-        return@runBlocking personDao.getRawPersonList()
+    suspend fun getRawList(billId: Int): List<PersonModel> {
+        return personDao.getRawPersonList(billId)
     }
 
-    fun getPerson(id: Int) = runBlocking {
-        return@runBlocking personDao.getPerson(id)
+    suspend fun getPerson(id: Int): PersonModel {
+        return personDao.getPerson(id)
     }
 
-    fun setValue(id : Integer, value : Float){
-        CoroutineScope(Dispatchers.IO).launch {
-            personDao.setValue(value, id)
-        }
+    suspend fun setValue(id: Integer, value: Float) {
+        personDao.setValue(value, id)
     }
 
-    fun deletePerson(id : Integer){
-        CoroutineScope(Dispatchers.IO).launch{
-            personDao.deletePerson(id)
-        }
+    suspend fun deletePerson(id: Integer) {
+        personDao.deletePerson(id)
     }
 
-    fun editPerson(id : Integer, name : String){
-        CoroutineScope(Dispatchers.IO).launch {
-            personDao.editPersonName(id, name)
-        }
+    suspend fun editPerson(id: Integer, name: String) {
+        personDao.editPersonName(id, name)
     }
 }

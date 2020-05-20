@@ -19,6 +19,7 @@ import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.utils.Formatter
 import com.example.application.billsplitingapp.newProductDialog.NewProductDialog
+import com.example.application.billsplitingapp.utils.Constants
 
 class ProductListFragment : Fragment() {
 
@@ -101,21 +102,24 @@ class ProductListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.product_recycler)
         recyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         recyclerView.hasFixedSize()
-        totalValue.text = Formatter.currencyFormat(prefs.getFloat("total", 0f))
+        totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
 
 
         // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
 
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
+
+            view.findViewById<TextView>(R.id.product_empty_alert).visibility = if(productList.isEmpty()) View.VISIBLE else View.GONE
+
             this.productList = productList
             var priceList : MutableList<Float> = ArrayList()
             productList.forEach {
                 priceList.add(it.price * it.amount)
             }
-            if(priceList.sum() != prefs.getFloat("total", 0f)) {
-                editor.putFloat("total", priceList.sum())
+            if(priceList.sum() != prefs.getFloat(Constants.TOTAL, 0f)) {
+                editor.putFloat(Constants.TOTAL, priceList.sum())
                 editor.apply()
-                totalValue.text = Formatter.currencyFormat(prefs.getFloat("total", 0f))
+                totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
             }
 
             val rList = viewModel.getRelations(productList)
@@ -184,7 +188,7 @@ class ProductListFragment : Fragment() {
             )
         newProductDialog.show(View.OnClickListener {
             val product =
-                ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!, newProductDialog.amountInt!!)
+                ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!, newProductDialog.amountInt!!, prefs.getInt(Constants.BILL_ID, 0))
             viewModel.insertProduct(product, newProductDialog.getSelected())
             activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             newProductDialog.dismiss()

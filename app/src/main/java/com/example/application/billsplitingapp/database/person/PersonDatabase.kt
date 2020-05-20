@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.application.billsplitingapp.models.PersonModel
 
-@Database(entities = [PersonModel::class], version = 1, exportSchema = false)
+@Database(entities = [PersonModel::class], version = 2, exportSchema = false)
 abstract class PersonDatabase : RoomDatabase(){
 
     abstract fun personDao() : PersonDao
@@ -28,7 +28,7 @@ abstract class PersonDatabase : RoomDatabase(){
                     context.applicationContext,
                     PersonDatabase::class.java,
                     "Person-database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 return instance
             }
