@@ -7,4 +7,6 @@ import androidx.room.PrimaryKey
 class BillModel (var name : String, var date : String){
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0
+
+    var value : Float = 0f
 }

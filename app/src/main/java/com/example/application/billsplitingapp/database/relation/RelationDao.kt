@@ -16,10 +16,10 @@ interface RelationDao {
     fun getRelationList() : LiveData<List<RelationModel>>
 
     @Query("DELETE FROM RelationModel WHERE productId =:productId")
-    suspend fun deleteByProduct(productId: java.lang.Integer)
+    suspend fun deleteByProduct(productId: Int)
 
     @Query("DELETE FROM RelationModel WHERE personId =:personId")
-    suspend fun deleteByPerson(personId: Integer)
+    suspend fun deleteByPerson(personId: Int)
 
     @Query("UPDATE RelationModel SET value = :value WHERE  productId =:productId")
     suspend fun setRelationValue(productId: Int, value : Float)
@@ -28,11 +28,11 @@ interface RelationDao {
     suspend fun deleteSpecific(productId : Int, personId : Int)
 
     @Query("SELECT productId FROM RelationModel WHERE personId =:personId")
-    suspend fun getProductsRelated(personId: Integer) : List<Integer>
+    suspend fun getProductsRelated(personId: Int) : List<Int>
 
     @Query("SELECT personId FROM RelationModel WHERE productId =:productId")
-    suspend fun getPeopleRelated(productId: Integer) : List<Int>
+    suspend fun getPeopleRelated(productId: Int) : List<Int>
 
     @Query("SELECT value FROM RelationModel WHERE personId =:personId")
-    suspend fun getRelationValue(personId: Integer) : List<Float>
+    suspend fun getRelationValue(personId: Int) : List<Float>
 }

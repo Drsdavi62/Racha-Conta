@@ -21,15 +21,15 @@ class RelationRepository(private val context: Context) {
         return dao.getRelationList()
     }
 
-    suspend fun insertRelation(productId: Integer, personId: Integer, value: Float) {
+    suspend fun insertRelation(productId: Int, personId: Int, value: Float) {
         dao.insertRelation(RelationModel(productId, personId, value))
     }
 
-    suspend fun deleteByProduct(productId: Integer) {
+    suspend fun deleteByProduct(productId: Int) {
         dao.deleteByProduct(productId)
     }
 
-    suspend fun deleteByPerson(personId: Integer) {
+    suspend fun deleteByPerson(personId: Int) {
         dao.deleteByPerson(personId)
     }
 
@@ -37,19 +37,19 @@ class RelationRepository(private val context: Context) {
         dao.deleteSpecific(productId, personId)
     }
 
-    suspend fun setRelationValue(productId: Integer, value: Float) {
+    suspend fun setRelationValue(productId: Int, value: Float) {
         dao.setRelationValue(productId.toInt(), value)
     }
 
-    suspend fun getProductsRelated(personId: Integer): List<Integer> {
+    suspend fun getProductsRelated(personId: Int): List<Int> {
         return dao.getProductsRelated(personId)
     }
 
-    suspend fun getPeopleRelated(productId: Integer): List<Int>  {
+    suspend fun getPeopleRelated(productId: Int): List<Int>  {
         return dao.getPeopleRelated(productId)
     }
 
-    suspend fun getRelationValue(personId: Integer): List<Float>  {
+    suspend fun getRelationValue(personId: Int): List<Float>  {
         return dao.getRelationValue(personId)
     }
 

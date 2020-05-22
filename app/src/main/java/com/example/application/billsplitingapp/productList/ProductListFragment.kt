@@ -1,13 +1,16 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.preference.PreferenceManager
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.application.billsplitingapp.R
+import com.example.application.billsplitingapp.allBills.AllBillsActivity
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.utils.Formatter
@@ -23,9 +27,6 @@ import com.example.application.billsplitingapp.utils.Constants
 
 class ProductListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ProductListFragment()
-    }
 
     private lateinit var viewModel: ProductListViewModel
     private lateinit var recyclerView: RecyclerView
@@ -74,7 +75,7 @@ class ProductListFragment : Fragment() {
                 }
                 adapter.selectedItems.clear()
                 deletionMode = false
-                ActivityCompat.invalidateOptionsMenu(activity!!)
+                activity!!.invalidateOptionsMenu()
             }
             R.id.menu_add -> {
                 addProduct()
@@ -100,10 +101,18 @@ class ProductListFragment : Fragment() {
         editor = prefs.edit()
         totalValue = view.findViewById(R.id.product_total_value)
         recyclerView = view.findViewById(R.id.product_recycler)
-        recyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.hasFixedSize()
         totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
 
+
+        activity!!.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val intent = Intent(activity!!, AllBillsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                activity!!.startActivity(intent)
+            }
+        })
 
         // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
 
@@ -117,6 +126,7 @@ class ProductListFragment : Fragment() {
                 priceList.add(it.price * it.amount)
             }
             if(priceList.sum() != prefs.getFloat(Constants.TOTAL, 0f)) {
+                viewModel.setBillValue(priceList.sum())
                 editor.putFloat(Constants.TOTAL, priceList.sum())
                 editor.apply()
                 totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
@@ -138,7 +148,7 @@ class ProductListFragment : Fragment() {
                     val newProductDialog =
                         NewProductDialog(
                             activity!!, viewModel.getPersonList(),
-                            viewModel.getOneRelation(adapter.productList[position].id) as MutableList<Integer>
+                            viewModel.getOneRelation(adapter.productList[position].id) as MutableList<Int>
                         )
                     newProductDialog.nameStr = adapter.productList[position].name
                     newProductDialog.priceFloat = adapter.productList[position].price
@@ -164,12 +174,12 @@ class ProductListFragment : Fragment() {
                         )
                     )
                     deletionMode = true
-                    ActivityCompat.invalidateOptionsMenu(activity!!)
+                    activity!!.invalidateOptionsMenu()
                 }
 
                 override fun returnMode() {
                     deletionMode = false
-                    ActivityCompat.invalidateOptionsMenu(activity!!)
+                    activity!!.invalidateOptionsMenu()
                 }
 
                 override fun onAddClick(position: Int) {

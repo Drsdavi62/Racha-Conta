@@ -33,15 +33,19 @@ class PersonRepository(private val context: Context) {
         return personDao.getPerson(id)
     }
 
-    suspend fun setValue(id: Integer, value: Float) {
+    suspend fun setValue(id: Int, value: Float) {
         personDao.setValue(value, id)
     }
 
-    suspend fun deletePerson(id: Integer) {
+    suspend fun deletePerson(id: Int) {
         personDao.deletePerson(id)
     }
 
-    suspend fun editPerson(id: Integer, name: String) {
+    suspend fun deleteByBill(billId: Int){
+        personDao.deleteByBill(billId)
+    }
+
+    suspend fun editPerson(id: Int, name: String) {
         personDao.editPersonName(id, name)
     }
 }

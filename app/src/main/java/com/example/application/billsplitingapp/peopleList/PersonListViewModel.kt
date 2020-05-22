@@ -29,7 +29,7 @@ class PersonListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun setValue(id: Integer) {
+    fun setValue(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             var value: Float = 0f
             relationRepository.getRelationValue(id).forEach { float ->
@@ -39,7 +39,7 @@ class PersonListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun deletePerson(id: Integer) {
+    fun deletePerson(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             relationRepository.getProductsRelated(id).forEach { productId ->
                 val product = productRepository.getProduct(productId)
@@ -59,7 +59,7 @@ class PersonListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun editPerson(id: Integer, name: String) {
+    fun editPerson(id: Int, name: String) {
         CoroutineScope(Dispatchers.IO).launch { personRepository.editPerson(id, name) }
 
     }

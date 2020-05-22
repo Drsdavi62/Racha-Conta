@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BillSplitingApp</string>
+    <string name="app_name">Bill Splitter</string>
 
     <!-- Product dialog -->
     <string name="product_dialog_name_hint">Product name</string>
@@ -23,5 +23,10 @@
     <string name="total_value_title">Total Value</string>
     <string name="empty_person_list">No people yet</string>
     <string name="empty_product_list">No products yet</string>
+    <string name="bill_list_empty_alert">No bills yet</string>
+
+    <string name="all_bills_action_bar">All Bills</string>
+    <string name="new_bill_dialog_title">Restaurant name</string>
+    <string name="empty_bill_name_toast">Restaurant\'s name can\'t be empty</string>
 
 </resources>

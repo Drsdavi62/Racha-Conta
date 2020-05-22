@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BillSplitingApp</string>
+    <string name="app_name">Racha Conta</string>
 
     <!-- Product dialog -->
     <string name="product_dialog_name_hint">Nome do produto</string>
@@ -24,5 +24,10 @@
     <string name="total_value_title">Valor total</string>
     <string name="empty_person_list">Nenhuma pessoa registrada</string>
     <string name="empty_product_list">Nenhum produto registrado</string>
+    <string name="bill_list_empty_alert">Nenhuma comanda registrada</string>
+
+    <string name="all_bills_action_bar">Todas as comandas</string>
+    <string name="new_bill_dialog_title">Nome do restaurante</string>
+    <string name="empty_bill_name_toast">O nome do restaurante não pode ser vazio</string>
 
 </resources>

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.models.PersonModel
 
-class ProductDialogAdapter(var list: List<PersonModel>, var selectedId: MutableList<Integer>?) : RecyclerView.Adapter<ProductDialogAdapter.ViewHolder>() {
+class ProductDialogAdapter(var list: List<PersonModel>, var selectedId: MutableList<Int>?) : RecyclerView.Adapter<ProductDialogAdapter.ViewHolder>() {
 
     init{
         if(selectedId == null){

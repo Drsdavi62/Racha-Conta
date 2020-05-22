@@ -26,4 +26,8 @@ class BillRepository (private val context: Context) {
     suspend fun deleteBill(id: Int){
         billDao.deleteBill(id)
     }
+
+    suspend fun setBillValue(id : Int, value : Float){
+        billDao.setBillValue(id, value)
+    }
 }

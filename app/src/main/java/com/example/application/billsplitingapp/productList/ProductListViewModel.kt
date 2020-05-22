@@ -1,10 +1,12 @@
 package com.example.application.billsplitingapp.productList
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.annotation.IntegerRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
+import com.example.application.billsplitingapp.database.bill.BillRepository
 import com.example.application.billsplitingapp.database.person.PersonRepository
 import com.example.application.billsplitingapp.database.product.ProductRepository
 import com.example.application.billsplitingapp.database.relation.RelationRepository
@@ -21,14 +23,15 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private val personRepository = PersonRepository(application)
     private val relationRepository = RelationRepository(application)
     private val productRepository: ProductRepository = ProductRepository(application)
+    private val billRepository = BillRepository(application)
     var list: LiveData<List<ProductModel>>
-    val prefs = PreferenceManager.getDefaultSharedPreferences(application)
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
 
     init {
         list = productRepository.getList(prefs.getInt(Constants.BILL_ID, 0))
     }
 
-    fun insertProduct(product: ProductModel, idList: List<Integer>) {
+    fun insertProduct(product: ProductModel, idList: List<Int>) {
         CoroutineScope(Dispatchers.IO).launch {
             productRepository.insertProduct(product)
             val finalProduct = productRepository.getLastProduct()
@@ -41,11 +44,11 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun editProduct(
-        id: Integer,
+        id: Int,
         name: String,
         price: Float,
         amount: Int,
-        relationList: List<Integer>
+        relationList: List<Int>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             productRepository.editProduct(id, name, price, amount)
@@ -83,14 +86,20 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         return@runBlocking finalList
     }
 
-    fun getOneRelation(productId: Integer): List<Int> = runBlocking {
+    fun getOneRelation(productId: Int): List<Int> = runBlocking {
         relationRepository.getPeopleRelated(productId)
     }
 
-    fun deleteProduct(id: Integer) {
+    fun deleteProduct(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             productRepository.deleteProduct(id)
             relationRepository.deleteByProduct(id)
+        }
+    }
+
+    fun setBillValue(sum: Float) {
+        CoroutineScope(Dispatchers.IO).launch {
+            billRepository.setBillValue(prefs.getInt(Constants.BILL_ID, 0), sum)
         }
     }
 }

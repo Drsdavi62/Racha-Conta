@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity
 class PersonModel (var name : String, var value : Float, var billId : Int){
     @PrimaryKey(autoGenerate = true)
-    lateinit var id : Integer
+    var id : Int = 0
 }

@@ -1,9 +1,7 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -16,7 +14,6 @@ import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.utils.Formatter
 import kotlinx.android.synthetic.main.item_product.view.*
-import kotlin.math.abs
 
 
 class ProductListAdapter (val productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
@@ -73,10 +70,10 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
     }
 
     inner class ViewHolder(itemView: View, listener : OnItemClickListener) : RecyclerView.ViewHolder(itemView){
-        var name: TextView = itemView.product_name
-        var price: TextView = itemView.product_price
-        var people : TextView = itemView.item_people
-        var amount : TextView = itemView.item_product_amount
+        var name: TextView = itemView.bill_name
+        var price: TextView = itemView.item_bill_value
+        var people : TextView = itemView.item_bill_people
+        var amount : TextView = itemView.item_bill_date
         var addBtn : ImageButton = itemView.product_add_button
 
         init{
@@ -89,7 +86,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
                         itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
                     } else {
                         selectedItems.remove(productList[adapterPosition])
-                        itemView.setBackgroundColor(Color.WHITE)
+                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
                         if(selectedItems.isEmpty()){
                             selectionMode = false
                             listener.returnMode()
@@ -104,6 +101,8 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
                 listener.onHold(itemView)
                 return@setOnLongClickListener true
             }
+
+            amount.setOnClickListener{listener.onItemClick(adapterPosition)}
         }
 
     }

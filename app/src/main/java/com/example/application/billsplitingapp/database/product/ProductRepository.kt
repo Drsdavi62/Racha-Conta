@@ -22,11 +22,15 @@ class ProductRepository(private val context: Context) {
         productDao.add(productModel)
     }
 
-    suspend fun editProduct(id: Integer, name: String, price: Float, amount: Int) {
+    suspend fun getRawList(billId: Int) : List<ProductModel>{
+        return productDao.getRawList(billId)
+    }
+
+    suspend fun editProduct(id: Int, name: String, price: Float, amount: Int) {
         productDao.editProduct(id, name, price, amount)
     }
 
-    suspend fun addAmount(id: Integer) {
+    suspend fun addAmount(id: Int) {
         productDao.addAmount(id)
     }
 
@@ -34,12 +38,16 @@ class ProductRepository(private val context: Context) {
         return productDao.getProductList(billId)
     }
 
-    suspend fun getProduct(id: Integer): ProductModel {
+    suspend fun getProduct(id: Int): ProductModel {
         return productDao.getProduct(id.toInt())
     }
 
-    suspend fun deleteProduct(id: Integer) {
+    suspend fun deleteProduct(id: Int) {
         productDao.deleteProduct(id)
+    }
+
+    suspend fun deleteByBill(billId: Int){
+        productDao.deleteByBill(billId)
     }
 
     suspend fun getLastProduct(): ProductModel {

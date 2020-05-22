@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.AbsListView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -25,33 +28,29 @@ class AllBillsActivity : AppCompatActivity() {
     private lateinit var recyclerView : RecyclerView
     private lateinit var adapter: BillsAdapter
     private lateinit var viewModel: AllBillsViewModel
+    private var deletionMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_bills)
-        supportActionBar!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.actionBarColor)))
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.actionBarColor)))
+        supportActionBar!!.title = getString(R.string.all_bills_action_bar)
         viewModel = ViewModelProvider(this).get(AllBillsViewModel::class.java)
         recyclerView = findViewById(R.id.all_bills_recycler)
         recyclerView.hasFixedSize()
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        viewModel.list.observe(this, Observer {
-            adapter = BillsAdapter(it)
-            recyclerView.adapter = adapter
+        val fab = bill_add_button
 
+        viewModel.list.observe(this, Observer {
+
+            findViewById<TextView>(R.id.bill_empty_alert).visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
+
+            val relationList = viewModel.getRelationList(it)
+            adapter = BillsAdapter(it, relationList)
+            recyclerView.adapter = adapter
             adapter.setOnItemClickListener(object : BillsAdapter.OnItemClickListener{
                 override fun onItemCLick(id: Int, name : String) {
-//                    val inputDialog = InputDialog(this@AllBillsActivity, "Edit Bill")
-//                    inputDialog.show(View.OnClickListener {
-//                        if(inputDialog.editText.isNotEmpty()){
-//                            viewModel.editBill(id, inputDialog.editText)
-//                            this@AllBillsActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-//                            inputDialog.dismiss()
-//                        } else {
-//                            Toast.makeText(this@AllBillsActivity, "Can't be empty", Toast.LENGTH_LONG).show()
-//                        }
-//                    })
-
                     val prefs = PreferenceManager.getDefaultSharedPreferences(application)
                     val editor = prefs.edit()
                     editor.putInt(Constants.BILL_ID, id)
@@ -61,22 +60,51 @@ class AllBillsActivity : AppCompatActivity() {
                     intent.putExtra(Constants.BILL_NAME, name)
                     startActivity(intent)
                 }
+
+                override fun onHold(itemView: View) {
+                    deletionMode = true
+                    fab.setImageDrawable(ContextCompat.getDrawable(this@AllBillsActivity, R.drawable.ic_delete))
+                }
+
+                override fun onReturnMode() {
+                    deletionMode = false
+                    fab.setImageDrawable(ContextCompat.getDrawable(this@AllBillsActivity, R.drawable.ic_add))
+                }
             })
 
         })
 
-        bill_add_button.setOnClickListener{
-            val inputDialog = InputDialog(this, "New Bill")
-            inputDialog.show(View.OnClickListener {
-                if(inputDialog.editText.isNotEmpty()) {
-                    viewModel.insertBill(inputDialog.editText)
-                    this@AllBillsActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-                    inputDialog.dismiss()
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if(dy > 0){
+                    fab.hide()
                 } else {
-                    Toast.makeText(this, "Can't be empty", Toast.LENGTH_LONG).show()
+                    fab.show()
                 }
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
 
-            })
+        fab.setOnClickListener{
+            if(!deletionMode) {
+                val inputDialog = InputDialog(this, getString(R.string.new_bill_dialog_title))
+                inputDialog.show(View.OnClickListener {
+                    if (inputDialog.editText.isNotEmpty()) {
+                        viewModel.insertBill(inputDialog.editText)
+                        this@AllBillsActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                        inputDialog.dismiss()
+                    } else {
+                        Toast.makeText(this, getString(R.string.empty_bill_name_toast), Toast.LENGTH_LONG).show()
+                    }
+                })
+            } else {
+                adapter.selectedItems.forEach {
+                    viewModel.deleteBill(it.id)
+                }
+                deletionMode = false
+                adapter.selectedItems.clear()
+                fab.setImageDrawable(ContextCompat.getDrawable(this@AllBillsActivity, R.drawable.ic_add))
+            }
         }
     }
 }

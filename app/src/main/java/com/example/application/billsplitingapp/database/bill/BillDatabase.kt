@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.application.billsplitingapp.models.BillModel
 
 
-@Database(entities = [BillModel::class], version = 1, exportSchema = false)
+@Database(entities = [BillModel::class], version = 2, exportSchema = false)
 abstract class BillDatabase : RoomDatabase(){
 
     abstract fun billDao() : BillDao

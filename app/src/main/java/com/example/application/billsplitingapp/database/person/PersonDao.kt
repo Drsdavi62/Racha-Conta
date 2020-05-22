@@ -19,16 +19,19 @@ interface PersonDao {
     suspend fun getRawPersonList(billId : Int) : List<PersonModel>
 
     @Query("DELETE FROM PersonModel WHERE id = :id")
-    suspend fun deletePerson(id: Integer)
+    suspend fun deletePerson(id: Int)
+
+    @Query("DELETE FROM PersonModel WHERE billId =:billId")
+    suspend fun deleteByBill(billId: Int)
 
     @Query("UPDATE PersonModel SET name = :name WHERE id = :id")
-    suspend fun editPersonName(id: Integer, name: String)
+    suspend fun editPersonName(id: Int, name: String)
 
     @Query("UPDATE PersonModel SET value =:value WHERE id =:id")
-    suspend fun setValue(value: Float, id: Integer)
+    suspend fun setValue(value: Float, id: Int)
 
     @Query("UPDATE PersonModel SET value = value - :value WHERE id =:id")
-    suspend fun subtractToPersonValue(value: Float, id: Integer)
+    suspend fun subtractToPersonValue(value: Float, id: Int)
 
     @Query("SELECT * FROM PersonModel WHERE id =:id")
     suspend fun getPerson(id: Int) : PersonModel

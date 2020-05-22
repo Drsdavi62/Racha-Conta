@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 class RelationModel(
-    var productId: Integer,
-    var personId: Integer,
+    var productId: Int,
+    var personId: Int,
     var value: Float
 ) {
     @PrimaryKey(autoGenerate = true)
-    lateinit var id : Integer
+    var id : Int = 0
 }

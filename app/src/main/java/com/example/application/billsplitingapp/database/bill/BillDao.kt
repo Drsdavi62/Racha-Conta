@@ -20,4 +20,7 @@ interface BillDao {
 
     @Query("UPDATE BillModel SET name =:name WHERE id =:id")
     suspend fun editBill(id : Int, name : String)
+
+    @Query("update BillModel set value = :value where id =:id")
+    suspend fun setBillValue(id : Int, value : Float)
 }

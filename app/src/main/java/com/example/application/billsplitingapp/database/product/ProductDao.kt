@@ -20,13 +20,16 @@ interface ProductDao {
     suspend fun getRawList(billId : Int) : List<ProductModel>
 
     @Query("DELETE FROM ProductModel WHERE id = :id")
-    suspend fun deleteProduct(id: java.lang.Integer)
+    suspend fun deleteProduct(id: Int)
+
+    @Query("DELETE FROM ProductModel WHERE billId = :billId")
+    suspend fun deleteByBill(billId: Int)
 
     @Query("UPDATE ProductModel SET name = :name, price =:price, amount = :amount WHERE id = :id")
-    suspend fun editProduct(id: java.lang.Integer, name: String, price: Float, amount : Int)
+    suspend fun editProduct(id: Int, name: String, price: Float, amount : Int)
 
     @Query("UPDATE ProductModel SET amount = amount + 1 WHERE id = :id")
-    suspend fun addAmount(id : Integer)
+    suspend fun addAmount(id : Int)
 
     @Query("UPDATE ProductModel SET name = :name WHERE id = :id")
     suspend fun editProductName(id : Int, name : String)
