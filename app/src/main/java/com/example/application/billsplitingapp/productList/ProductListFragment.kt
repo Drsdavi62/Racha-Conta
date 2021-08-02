@@ -115,6 +115,7 @@ class ProductListFragment : Fragment() {
         })
 
         // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
+        viewModel.getList(prefs.getInt(Constants.BILL_ID, 0), activity!!.intent.getIntExtra("table", 0))
 
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
 

@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
         bottomNavigationView.setOnNavigationItemReselectedListener {
             when (it.itemId) {
                 R.id.bottom_navigation_products -> {

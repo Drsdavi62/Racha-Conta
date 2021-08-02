@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.annotation.IntegerRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.example.application.billsplitingapp.database.bill.BillRepository
 import com.example.application.billsplitingapp.database.person.PersonRepository
@@ -13,10 +14,15 @@ import com.example.application.billsplitingapp.database.relation.RelationReposit
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
 import com.example.application.billsplitingapp.utils.Constants
+import com.example.application.billsplitingapp.utils.retrofit.ProductApiInterface
+import com.example.application.billsplitingapp.utils.retrofit.Retrofitconfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ProductListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,11 +30,28 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private val relationRepository = RelationRepository(application)
     private val productRepository: ProductRepository = ProductRepository(application)
     private val billRepository = BillRepository(application)
-    var list: LiveData<List<ProductModel>>
+    var list: LiveData<List<ProductModel>> = MutableLiveData()
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
+    private val retrofitClient = Retrofitconfig.getRetrofitInstance(Constants.URL)
 
-    init {
+    fun getList(id : Int, table_id : Int) {
         list = productRepository.getList(prefs.getInt(Constants.BILL_ID, 0))
+//        val endpoint = retrofitClient.create(ProductApiInterface::class.java)
+//        val callback = endpoint.getOrders(id, table_id)
+//
+//        callback.enqueue(object : Callback<List<ProductModel>> {
+//            override fun onFailure(call: Call<List<ProductModel>>, t: Throwable) {
+//                print(t.toString())
+//            }
+//
+//            override fun onResponse(
+//                call: Call<List<ProductModel>>,
+//                response: Response<List<ProductModel>>
+//            ) {
+//                list.value = response.body()
+//            }
+//
+//        })
     }
 
     fun insertProduct(product: ProductModel, idList: List<Int>) {

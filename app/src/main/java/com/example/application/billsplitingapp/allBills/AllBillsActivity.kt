@@ -21,6 +21,7 @@ import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.InputDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_all_bills.*
 
 class AllBillsActivity : AppCompatActivity() {
@@ -86,25 +87,49 @@ class AllBillsActivity : AppCompatActivity() {
         })
 
         fab.setOnClickListener{
-            if(!deletionMode) {
-                val inputDialog = InputDialog(this, getString(R.string.new_bill_dialog_title))
-                inputDialog.show(View.OnClickListener {
-                    if (inputDialog.editText.isNotEmpty()) {
-                        viewModel.insertBill(inputDialog.editText)
-                        this@AllBillsActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-                        inputDialog.dismiss()
-                    } else {
-                        Toast.makeText(this, getString(R.string.empty_bill_name_toast), Toast.LENGTH_LONG).show()
-                    }
-                })
+//            if(!deletionMode) {
+//                val inputDialog = InputDialog(this, getString(R.string.new_bill_dialog_title))
+//                inputDialog.show(View.OnClickListener {
+//                    if (inputDialog.editText.isNotEmpty()) {
+//                        viewModel.insertBill(inputDialog.editText)
+//                        this@AllBillsActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+//                        inputDialog.dismiss()
+//                    } else {
+//                        Toast.makeText(this, getString(R.string.empty_bill_name_toast), Toast.LENGTH_LONG).show()
+//                    }
+//                })
+//            } else {
+//                adapter.selectedItems.forEach {
+//                    viewModel.deleteBill(it.id)
+//                }
+//                deletionMode = false
+//                adapter.selectedItems.clear()
+//                fab.setImageDrawable(ContextCompat.getDrawable(this@AllBillsActivity, R.drawable.ic_add))
+//            }
+            IntentIntegrator(this).initiateScan()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.contents == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                adapter.selectedItems.forEach {
-                    viewModel.deleteBill(it.id)
-                }
-                deletionMode = false
-                adapter.selectedItems.clear()
-                fab.setImageDrawable(ContextCompat.getDrawable(this@AllBillsActivity, R.drawable.ic_add))
+                val values = result.contents.split('/')
+                val prefs = PreferenceManager.getDefaultSharedPreferences(application)
+                val editor = prefs.edit()
+                editor.putInt(Constants.BILL_ID, values[0].toInt())
+                editor.apply()
+                val intent = Intent(this@AllBillsActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.putExtra(Constants.BILL_NAME, result.contents)
+                intent.putExtra("table", values[1].toInt())
+                startActivity(intent)
+                Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show();
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

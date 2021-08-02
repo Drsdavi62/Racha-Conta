@@ -16,14 +16,17 @@ import com.example.application.billsplitingapp.utils.Formatter
 import kotlinx.android.synthetic.main.item_product.view.*
 
 
-class ProductListAdapter (val productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(
+    val productList: MutableList<ProductModel>,
+    var relationList: List<List<PersonModel>>
+) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
-    lateinit var listener : OnItemClickListener
+    lateinit var listener: OnItemClickListener
     private var selectionMode = false
-    var selectedItems : MutableList<ProductModel> = ArrayList()
+    var selectedItems: MutableList<ProductModel> = ArrayList()
 
-    interface OnItemClickListener{
-        fun onItemClick(position : Int)
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
 
         fun onHold(itemView: View)
 
@@ -32,7 +35,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
         fun onAddClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener : OnItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
 
@@ -49,17 +52,17 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = productList[position].name
         holder.price.text = Formatter.currencyFormat(productList[position].price)
-        val personList = relationList[position] as MutableList
-        personList.sortBy { it.id.toInt() }
-        val names = personList.map { it.name }
-        holder.people.text = names.joinToString (", ")
+//        val personList = relationList[position] as MutableList
+//        personList.sortBy { it.id.toInt() }
+//        val names = personList.map { if(it != null) it.name else "Foi mal" }
+//        holder.people.text = names.joinToString(", ")
         holder.amount.text = productList[position].amount.toString()
-        holder.addBtn.setOnClickListener{
+        holder.addBtn.setOnClickListener {
             listener.onAddClick(position)
         }
     }
 
-    fun updateList(newList : List<ProductModel>, relationList: List<List<PersonModel>>){
+    fun updateList(newList: List<ProductModel>, relationList: List<List<PersonModel>>) {
         this.relationList = relationList
         val diffCallback = ProductDiffCallback(this.productList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -69,25 +72,36 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class ViewHolder(itemView: View, listener : OnItemClickListener) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View, listener: OnItemClickListener) :
+        RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.bill_name
         var price: TextView = itemView.item_bill_value
-        var people : TextView = itemView.item_bill_people
-        var amount : TextView = itemView.item_bill_date
-        var addBtn : ImageButton = itemView.product_add_button
+        var people: TextView = itemView.item_bill_people
+        var amount: TextView = itemView.item_bill_date
+        var addBtn: ImageButton = itemView.product_add_button
 
-        init{
-            itemView.setOnClickListener{
-                if(!selectionMode) {
+        init {
+            itemView.setOnClickListener {
+                if (!selectionMode) {
                     listener.onItemClick(adapterPosition)
                 } else {
-                    if(!selectedItems.contains(productList[adapterPosition])) {
+                    if (!selectedItems.contains(productList[adapterPosition])) {
                         selectedItems.add(productList[adapterPosition])
-                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+                        itemView.setBackgroundColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorAccent
+                            )
+                        )
                     } else {
                         selectedItems.remove(productList[adapterPosition])
-                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
-                        if(selectedItems.isEmpty()){
+                        itemView.setBackgroundColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.cardBackgroundColor
+                            )
+                        )
+                        if (selectedItems.isEmpty()) {
                             selectionMode = false
                             listener.returnMode()
                         }
@@ -102,7 +116,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
                 return@setOnLongClickListener true
             }
 
-            amount.setOnClickListener{listener.onItemClick(adapterPosition)}
+            amount.setOnClickListener { listener.onItemClick(adapterPosition) }
         }
 
     }
