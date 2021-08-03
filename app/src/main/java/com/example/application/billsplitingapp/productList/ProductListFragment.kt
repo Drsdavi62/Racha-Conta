@@ -1,29 +1,22 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.example.application.billsplitingapp.R
-import com.example.application.billsplitingapp.allBills.AllBillsActivity
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.models.ProductModel
-import com.example.application.billsplitingapp.utils.Formatter
 import com.example.application.billsplitingapp.newProductDialog.NewProductDialog
 import com.example.application.billsplitingapp.utils.Constants
+import com.example.application.billsplitingapp.utils.Formatter
 
 class ProductListFragment : Fragment() {
 
@@ -34,11 +27,11 @@ class ProductListFragment : Fragment() {
     private var deletionMode = false
     private lateinit var totalValue: TextView
 
-    private var productList : List<ProductModel> = ArrayList()
-    private var relationList : List<List<PersonModel>> = ArrayList()
+    private var productList: List<ProductModel> = ArrayList()
+    private var relationList: List<List<PersonModel>> = ArrayList()
 
-    private lateinit var prefs : SharedPreferences
-    private lateinit var editor : SharedPreferences.Editor
+    private lateinit var prefs: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +44,6 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.product_list_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onResume() {
@@ -107,14 +96,15 @@ class ProductListFragment : Fragment() {
 
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
 
-            view.findViewById<TextView>(R.id.product_empty_alert).visibility = if(productList.isEmpty()) View.VISIBLE else View.GONE
+            view.findViewById<TextView>(R.id.product_empty_alert).visibility =
+                if (productList.isEmpty()) View.VISIBLE else View.GONE
 
             this.productList = productList
-            var priceList : MutableList<Float> = ArrayList()
+            var priceList: MutableList<Float> = ArrayList()
             productList.forEach {
                 priceList.add(it.price * it.amount)
             }
-            if(priceList.sum() != prefs.getFloat(Constants.TOTAL, 0f)) {
+            if (priceList.sum() != prefs.getFloat(Constants.TOTAL, 0f)) {
                 viewModel.setBillValue(priceList.sum())
                 editor.putFloat(Constants.TOTAL, priceList.sum())
                 editor.apply()
@@ -156,12 +146,12 @@ class ProductListFragment : Fragment() {
                 }
 
                 override fun onHold(itemView: View) {
-                    itemView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.colorAccent
-                        )
-                    )
+//                    itemView.setBackgroundColor(
+//                        ContextCompat.getColor(
+//                            itemView.context,
+//                            R.color.colorAccent
+//                        )
+//                    )
                     deletionMode = true
                     activity!!.invalidateOptionsMenu()
                 }
@@ -172,14 +162,17 @@ class ProductListFragment : Fragment() {
                 }
 
                 override fun onAddClick(position: Int) {
-                    viewModel.addAmount(adapter.productList[position], adapter.relationList[position])
+                    viewModel.addAmount(
+                        adapter.productList[position],
+                        adapter.relationList[position]
+                    )
                 }
 
             })
         })
     }
 
-    private fun addProduct(){
+    private fun addProduct() {
         val newProductDialog =
             NewProductDialog(
                 activity!!,
@@ -187,7 +180,12 @@ class ProductListFragment : Fragment() {
             )
         newProductDialog.show(View.OnClickListener {
             val product =
-                ProductModel(newProductDialog.nameStr!!, newProductDialog.priceFloat!!, newProductDialog.amountInt!!, prefs.getInt(Constants.BILL_ID, 0))
+                ProductModel(
+                    newProductDialog.nameStr!!,
+                    newProductDialog.priceFloat!!,
+                    newProductDialog.amountInt!!,
+                    prefs.getInt(Constants.BILL_ID, 0)
+                )
             viewModel.insertProduct(product, newProductDialog.getSelected())
             activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             newProductDialog.dismiss()

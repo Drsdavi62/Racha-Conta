@@ -3,9 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/blue500</item>
+        <item name="colorPrimaryVariant">@color/blue900</item>
+        <item name="colorPrimaryDark">@color/blue900</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorAccent">@color/orange400</item>
+        <item name="colorSecondary">@color/orange400</item>
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">

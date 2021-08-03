@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar!!
         actionBar.title = intent.getStringExtra(Constants.BILL_NAME)!!
-        actionBar.setBackgroundDrawable(
-            ColorDrawable(
-                ContextCompat.getColor(
-                    this,
-                    R.color.actionBarColor
-                )
-            )
-        )
+//        actionBar.setBackgroundDrawable(
+//            ColorDrawable(
+//                ContextCompat.getColor(
+//                    this,
+//                    R.color.actionBarColor
+//                )
+//            )
+//        )
         actionBar.setDisplayHomeAsUpEnabled(true)
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
 

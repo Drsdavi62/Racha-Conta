@@ -34,7 +34,7 @@ class AllBillsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_all_bills)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.actionBarColor)))
+//        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.actionBarColor)))
         supportActionBar?.title = getString(R.string.all_bills_action_bar)
         viewModel = ViewModelProvider(this).get(AllBillsViewModel::class.java)
         recyclerView = findViewById(R.id.all_bills_recycler)

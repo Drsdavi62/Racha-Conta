@@ -10,16 +10,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:id="@+id/bill_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textStyle="bold"
+            android:text="Produto"
             app:layout_constraintEnd_toStartOf="@+id/item_bill_value"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,11 +29,9 @@
             android:id="@+id/item_bill_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:text="R$50.00"
             android:maxLines="1"
-            android:inputType="textNoSuggestions"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toTopOf="@+id/item_layout_people"
             app:layout_constraintEnd_toStartOf="@+id/product_add_button"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,56 +39,44 @@
             android:id="@+id/product_add_button"
             android:layout_width="50dp"
             android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="5dp"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_add"
+            android:tint="?attr/colorPrimaryVariant"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:tint="#090909"
-            android:background="?android:selectableItemBackground"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/item_layout_people"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/divisor"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/product_add_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bill_name">
+            app:layout_constraintTop_toBottomOf="@id/item_bill_value"
+            android:backgroundTint="?attr/colorSecondary" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/divisor"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:backgroundTint="#A3A1A1"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/item_bill_people"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Davi, Julia"
+            android:maxWidth="100dp"
+            android:layout_marginStart="2dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintTop_toBottomOf="@id/divisor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/item_bill_date"/>
 
-            <TextView
-                android:id="@+id/item_bill_people"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="5dp"
-                android:maxWidth="100dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/item_bill_date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divisor" />
-
-            <TextView
-                android:id="@+id/item_bill_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divisor" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/item_bill_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45"
+            app:layout_constraintBaseline_toBaselineOf="@id/item_bill_people"
+            app:layout_constraintEnd_toStartOf="@id/product_add_button"
+            android:layout_marginEnd="2dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

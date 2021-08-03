@@ -83,10 +83,10 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
                 } else {
                     if(!selectedItems.contains(productList[adapterPosition])) {
                         selectedItems.add(productList[adapterPosition])
-                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
                     } else {
                         selectedItems.remove(productList[adapterPosition])
-                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
+//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
                         if(selectedItems.isEmpty()){
                             selectionMode = false
                             listener.returnMode()
