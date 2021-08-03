@@ -58,13 +58,6 @@ class BillsAdapter(val list : List<BillModel>, private val relationList : List<L
         val people: TextView = itemView.findViewById(R.id.item_bill_people)
 
         init{
-//            name.setOnClickListener{
-//                listener.onItemCLick(list[adapterPosition].id, list[adapterPosition].name)
-//            }
-//            date.setOnClickListener{
-//                listener.onItemCLick(list[adapterPosition].id, list[adapterPosition].name)
-//            }
-
             itemView.setOnClickListener{
                 if(!selectionMode) {
                     listener.onItemCLick(list[adapterPosition].id, list[adapterPosition].name)
@@ -73,6 +66,7 @@ class BillsAdapter(val list : List<BillModel>, private val relationList : List<L
                         selectedItems.remove(list[adapterPosition])
                         itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
                         if(selectedItems.isEmpty()){
+                            selectionMode = false
                             listener.onReturnMode()
                         }
                     } else {

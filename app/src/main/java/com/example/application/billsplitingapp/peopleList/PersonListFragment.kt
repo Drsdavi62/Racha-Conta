@@ -43,10 +43,6 @@ class PersonListFragment : Fragment() {
         return inflater.inflate(R.layout.people_list_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu, menu)
@@ -74,14 +70,6 @@ class PersonListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.people_recycler)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.hasFixedSize()
-
-        activity!!.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val intent = Intent(activity!!, AllBillsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                activity!!.startActivity(intent)
-            }
-        })
 
         viewModel.list.observe(viewLifecycleOwner, Observer { personList ->
 

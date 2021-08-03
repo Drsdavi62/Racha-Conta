@@ -28,6 +28,7 @@
         android:layout_height="0dp"
         android:clickable="false"
         android:focusable="false"
+        android:layout_marginTop="5dp"
         android:focusableInTouchMode="false"
         app:layout_constraintBottom_toTopOf="@+id/divisor"
         app:layout_constraintTop_toTopOf="parent"

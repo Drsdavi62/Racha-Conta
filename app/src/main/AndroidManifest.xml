@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_bill_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".allBills.AllBillsActivity">
+        <activity android:name=".allBills.AllBillsActivity" android:theme="@style/splashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

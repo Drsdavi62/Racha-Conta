@@ -105,17 +105,6 @@ class ProductListFragment : Fragment() {
         recyclerView.hasFixedSize()
         totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
 
-
-        activity!!.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val intent = Intent(activity!!, AllBillsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                activity!!.startActivity(intent)
-            }
-        })
-
-        // sharedViewModel.personList.observe(viewLifecycleOwner, Observer { sharedViewModel.setupProduct() })
-
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
 
             view.findViewById<TextView>(R.id.product_empty_alert).visibility = if(productList.isEmpty()) View.VISIBLE else View.GONE

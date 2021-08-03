@@ -52,6 +52,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
+                android:layout_marginVertical="5dp"
                 android:backgroundTint="#A3A1A1"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:maxWidth="100dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                 app:layout_constraintBottom_toBottomOf="parent"

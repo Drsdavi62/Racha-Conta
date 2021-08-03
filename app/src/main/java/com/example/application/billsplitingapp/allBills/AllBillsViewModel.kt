@@ -21,11 +21,7 @@ class AllBillsViewModel(application: Application) : AndroidViewModel(application
     private val billRepository = BillRepository(application)
     private val productRepository = ProductRepository(application)
     private val personRepository = PersonRepository(application)
-    var list: LiveData<List<BillModel>>
-
-    init {
-        list = billRepository.getList()
-    }
+    var list: LiveData<List<BillModel>> = billRepository.getList()
 
     fun insertBill(name: String) {
         CoroutineScope(Dispatchers.IO).launch {
