@@ -4,7 +4,9 @@
     <color name="blue600">#009de0</color>
     <color name="blue700">#008acd</color>
     <color name="blue900">#005997</color>
-    
+
+    <color name="white">#FFFFFF</color>
+
     <color name="orange500">#ff510c</color>
     <color name="orange400">#ff6d38</color>
 

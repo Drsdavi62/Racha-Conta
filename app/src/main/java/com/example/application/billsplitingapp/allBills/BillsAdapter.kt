@@ -64,20 +64,20 @@ class BillsAdapter(val list : List<BillModel>, private val relationList : List<L
                 } else {
                     if(selectedItems.contains(list[adapterPosition])){
                         selectedItems.remove(list[adapterPosition])
-//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
+                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.white))
                         if(selectedItems.isEmpty()){
                             selectionMode = false
                             listener.onReturnMode()
                         }
                     } else {
                         selectedItems.add(list[adapterPosition])
-//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.orange400))
                     }
                 }
             }
 
             itemView.setOnLongClickListener{
-//                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.orange400))
                 selectionMode = true
                 selectedItems.add(list[adapterPosition])
                 listener.onHold(itemView)

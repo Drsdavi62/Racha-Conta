@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,10 +83,10 @@ class ProductListAdapter (var productList : MutableList<ProductModel>, var relat
                 } else {
                     if(!selectedItems.contains(productList[adapterPosition])) {
                         selectedItems.add(productList[adapterPosition])
-//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.orange400))
                     } else {
                         selectedItems.remove(productList[adapterPosition])
-//                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cardBackgroundColor))
+                        itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.white))
                         if(selectedItems.isEmpty()){
                             selectionMode = false
                             listener.returnMode()

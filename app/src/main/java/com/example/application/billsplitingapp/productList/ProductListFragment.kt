@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -151,12 +152,12 @@ class ProductListFragment : Fragment() {
                 }
 
                 override fun onHold(itemView: View) {
-//                    itemView.setBackgroundColor(
-//                        ContextCompat.getColor(
-//                            itemView.context,
-//                            R.color.colorAccent
-//                        )
-//                    )
+                    itemView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.orange400
+                        )
+                    )
                     deletionMode = true
                     requireActivity().invalidateOptionsMenu()
                 }
