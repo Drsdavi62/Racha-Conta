@@ -16,7 +16,7 @@ import com.example.application.billsplitingapp.utils.Formatter
 import kotlinx.android.synthetic.main.item_product.view.*
 
 
-class ProductListAdapter (val productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter (var productList : MutableList<ProductModel>, var relationList : List<List<PersonModel>>): RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     lateinit var listener : OnItemClickListener
     private var selectionMode = false
@@ -50,7 +50,7 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
         holder.name.text = productList[position].name
         holder.price.text = Formatter.currencyFormat(productList[position].price)
         val personList = relationList[position] as MutableList
-        personList.sortBy { it.id.toInt() }
+        personList.sortBy { it.id }
         val names = personList.map { it.name }
         holder.people.text = names.joinToString (", ")
         holder.amount.text = productList[position].amount.toString()
@@ -59,13 +59,12 @@ class ProductListAdapter (val productList : MutableList<ProductModel>, var relat
         }
     }
 
-    fun updateList(newList : List<ProductModel>, relationList: List<List<PersonModel>>){
+    fun updateList(newList : MutableList<ProductModel>, relationList: List<List<PersonModel>>){
         this.relationList = relationList
         val diffCallback = ProductDiffCallback(this.productList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
-        this.productList.clear()
-        this.productList.addAll(newList)
+        this.productList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 

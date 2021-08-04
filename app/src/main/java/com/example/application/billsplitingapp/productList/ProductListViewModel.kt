@@ -24,12 +24,8 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private val relationRepository = RelationRepository(application)
     private val productRepository: ProductRepository = ProductRepository(application)
     private val billRepository = BillRepository(application)
-    var list: LiveData<List<ProductModel>>
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
-
-    init {
-        list = productRepository.getList(prefs.getInt(Constants.BILL_ID, 0))
-    }
+    val list: LiveData<List<ProductModel>> = productRepository.getList(prefs.getInt(Constants.BILL_ID, 0))
 
     fun insertProduct(product: ProductModel, idList: List<Int>) {
         CoroutineScope(Dispatchers.IO).launch {

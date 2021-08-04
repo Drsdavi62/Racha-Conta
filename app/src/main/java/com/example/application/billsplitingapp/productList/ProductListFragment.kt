@@ -1,8 +1,10 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -37,12 +39,14 @@ class ProductListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         //val factory = ProductFactory(activity?.application!!)
         viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
+        Log.d(TAG, "onCreate: " + javaClass.name)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(TAG, "onCreateView: " + javaClass.name)
         return inflater.inflate(R.layout.product_list_fragment, container, false)
     }
 
@@ -64,7 +68,7 @@ class ProductListFragment : Fragment() {
                 }
                 adapter.selectedItems.clear()
                 deletionMode = false
-                activity!!.invalidateOptionsMenu()
+                requireActivity().invalidateOptionsMenu()
             }
             R.id.menu_add -> {
                 addProduct()
@@ -86,7 +90,8 @@ class ProductListFragment : Fragment() {
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prefs = PreferenceManager.getDefaultSharedPreferences(activity!!)
+        Log.d(TAG, "onViewCreated: " + javaClass.name)
+        prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity())
         editor = prefs.edit()
         totalValue = view.findViewById(R.id.product_total_value)
         recyclerView = view.findViewById(R.id.product_recycler)
@@ -126,7 +131,7 @@ class ProductListFragment : Fragment() {
                 override fun onItemClick(position: Int) {
                     val newProductDialog =
                         NewProductDialog(
-                            activity!!, viewModel.getPersonList(),
+                            requireActivity(), viewModel.getPersonList(),
                             viewModel.getOneRelation(adapter.productList[position].id) as MutableList<Int>
                         )
                     newProductDialog.nameStr = adapter.productList[position].name
@@ -140,7 +145,7 @@ class ProductListFragment : Fragment() {
                             newProductDialog.amountInt!!,
                             newProductDialog.getSelected()
                         )
-                        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                         newProductDialog.dismiss()
                     })
                 }
@@ -153,12 +158,12 @@ class ProductListFragment : Fragment() {
 //                        )
 //                    )
                     deletionMode = true
-                    activity!!.invalidateOptionsMenu()
+                    requireActivity().invalidateOptionsMenu()
                 }
 
                 override fun returnMode() {
                     deletionMode = false
-                    activity!!.invalidateOptionsMenu()
+                    requireActivity().invalidateOptionsMenu()
                 }
 
                 override fun onAddClick(position: Int) {
@@ -175,7 +180,7 @@ class ProductListFragment : Fragment() {
     private fun addProduct() {
         val newProductDialog =
             NewProductDialog(
-                activity!!,
+                requireActivity(),
                 viewModel.getPersonList()
             )
         newProductDialog.show(View.OnClickListener {
@@ -187,7 +192,7 @@ class ProductListFragment : Fragment() {
                     prefs.getInt(Constants.BILL_ID, 0)
                 )
             viewModel.insertProduct(product, newProductDialog.getSelected())
-            activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             newProductDialog.dismiss()
         })
     }
