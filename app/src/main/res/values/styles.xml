@@ -9,6 +9,7 @@
         <item name="colorOnPrimary">#000000</item>
         <item name="colorAccent">@color/orange400</item>
         <item name="colorSecondary">@color/orange400</item>
+        <item name="android:navigationBarColor">@color/blue900</item>
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">

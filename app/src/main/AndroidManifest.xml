@@ -9,15 +9,22 @@
         android:roundIcon="@mipmap/ic_bill_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".allBills.AllBillsActivity" android:theme="@style/splashScreen">
+        <activity
+            android:name=".ui.presentation.HomeActivity"
+            android:exported="true"
+            android:theme="@style/splashScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".allBills.AllBillsActivity"
+            android:theme="@style/splashScreen">
+
         </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
