@@ -22,6 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.allBills.AllBillsActivity
 import com.example.application.billsplitingapp.ui.components.DarkModeToggle
@@ -103,9 +105,7 @@ class HomeFragment : Fragment() {
                                     width = maxWidth / 2,
                                     outline = true,
                                     onClick = {
-                                        val intent =
-                                            Intent(requireActivity(), AllBillsActivity::class.java)
-                                        startActivity(intent)
+                                        findNavController().navigate(R.id.goToHistory)
                                     }
                                 )
                                 HomeButton(
@@ -114,7 +114,8 @@ class HomeFragment : Fragment() {
                                     width = maxWidth / 2,
                                     outline = false,
                                     onClick = {
-
+                                        val intent = Intent(requireActivity(), AllBillsActivity::class.java)
+                                        requireActivity().startActivity(intent)
                                     }
                                 )
                             }

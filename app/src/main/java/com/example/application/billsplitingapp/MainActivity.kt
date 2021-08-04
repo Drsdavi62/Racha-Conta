@@ -21,17 +21,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-        val actionBar = supportActionBar!!
-        actionBar.title = intent.getStringExtra(Constants.BILL_NAME)!!
-//        actionBar.setBackgroundDrawable(
+        val actionBar = supportActionBar
+        actionBar?.title = intent.getStringExtra(Constants.BILL_NAME)!!
+//        actionBar?.setBackgroundDrawable(
 //            ColorDrawable(
 //                ContextCompat.getColor(
 //                    this,
-//                    R.color.actionBarColor
+//                    R.color.actionBar?Color
 //                )
 //            )
 //        )
-        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
 
         NavigationUI.setupWithNavController(
