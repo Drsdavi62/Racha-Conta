@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.example.application.billsplitingapp.BillSplitApp
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
 import com.example.application.billsplitingapp.ui.components.IconText
@@ -36,9 +37,11 @@ import com.example.application.billsplitingapp.utils.Formatter
 class HistoryFragment : Fragment() {
 
     private lateinit var viewModel: HistoryViewModel
+    private lateinit var application: BillSplitApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        application = requireActivity().application as BillSplitApp
         viewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
     }
 
@@ -49,12 +52,7 @@ class HistoryFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-
-                val darkMode = remember {
-                    mutableStateOf(false)
-                }
-
-                BillSplitingAppTheme(darkMode.value) {
+                BillSplitingAppTheme(application.isDark.value) {
                     Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 
                         val list = viewModel.list.observeAsState(listOf()).value
@@ -68,7 +66,7 @@ class HistoryFragment : Fragment() {
                         LazyColumn() {
                             itemsIndexed(list) { index, bill ->
                                 HistoryCardItem(index = index, bill = bill, personList = viewModel.getRelationList(list)) {
-                                    darkMode.value = !darkMode.value
+                                    application::toggleDarkTheme
                                 }
                             }
                         }

@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,72 +27,68 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     darkTheme: Boolean,
     darkThemeToggleClick: () -> Unit,
-    maxWidth: Dp,
-    navController: NavController,
-    coroutineScope: CoroutineScope,
-    bottomSheetScaffoldState: BottomSheetScaffoldState
+    onHistoryClick: () -> Unit,
+    onAddClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
-    ) {
+    BoxWithConstraints(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
+        val maxWidth = maxWidth
 
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Text(
-                text = "Racha\n  Conta",
-                style = MaterialTheme.typography.h2,
-                color = MaterialTheme.colors.secondary,
+
+            Row(
                 modifier = Modifier
-                    .padding(start = 16.dp),
-                fontFamily = NovaOvalRegular
-            )
-            DarkModeToggle(
-                darkTheme = darkTheme,
-                modifier = Modifier.padding(end = 8.dp),
-                onClick = darkThemeToggleClick
-            )
-        }
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Racha\n  Conta",
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.secondary,
+                    modifier = Modifier
+                        .padding(start = 16.dp),
+                    fontFamily = NovaOvalRegular
+                )
+                DarkModeToggle(
+                    darkTheme = darkTheme,
+                    modifier = Modifier.padding(end = 8.dp),
+                    onClick = darkThemeToggleClick
+                )
+            }
 
 
-        Image(
-            painter = painterResource(id = R.drawable.fast_food),
-            contentDescription = "Fast food",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentScale = ContentScale.FillWidth
-        )
+            Image(
+                painter = painterResource(id = R.drawable.fast_food),
+                contentDescription = "Fast food",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                contentScale = ContentScale.FillWidth
+            )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            HomeButton(
-                icon = Icons.Filled.History,
-                text = "Histórico",
-                width = maxWidth / 2,
-                outline = true,
-                onClick = {
-                    navController.navigate(R.id.goToHistory)
-                }
-            )
-            HomeButton(
-                icon = Icons.Filled.Add,
-                text = "Adicionar Comanda",
-                width = maxWidth / 2,
-                outline = false,
-                onClick = {
-                    coroutineScope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    }
-                }
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                HomeButton(
+                    icon = Icons.Filled.History,
+                    text = "Histórico",
+                    width = maxWidth / 2,
+                    outline = true,
+                    onClick = onHistoryClick
+                )
+                HomeButton(
+                    icon = Icons.Filled.Add,
+                    text = "Adicionar Comanda",
+                    width = maxWidth / 2,
+                    outline = false,
+                    onClick = onAddClick
+                )
+            }
         }
     }
 }
