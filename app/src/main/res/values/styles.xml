@@ -10,11 +10,13 @@
         <item name="colorAccent">@color/orange400</item>
         <item name="colorSecondary">@color/orange400</item>
         <item name="android:navigationBarColor">@color/blue900</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     <style name="splashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>
