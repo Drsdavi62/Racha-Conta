@@ -8,12 +8,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
@@ -45,25 +46,11 @@ fun HomeBottomSheet(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = textValue.value,
-                onValueChange = { textValue.value = it },
-                label = {
-                    Text(text = "Restaurante")
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Store,
-                        contentDescription = "Restaurant"
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    keyboardController?.hide()
-                    onDoneClick(textValue.value)
-                }),
-            )
+            BottomSheetInput(textValue = textValue) {
+                keyboardController?.hide()
+                onDoneClick(textValue.value)
+                textValue.value = ""
+            }
 
             Spacer(modifier = Modifier.padding(16.dp))
 
@@ -74,6 +61,7 @@ fun HomeBottomSheet(
                 OutlinedButton(
                     onClick = {
                         keyboardController?.hide()
+                        textValue.value = ""
                         onCancelClick()
                     },
                     shape = RoundedCornerShape(10.dp),
@@ -85,6 +73,7 @@ fun HomeBottomSheet(
                     onClick = {
                         keyboardController?.hide()
                         onDoneClick(textValue.value)
+                        textValue.value = ""
                     },
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.width(maxWidth / 2 - 40.dp)
@@ -94,5 +83,33 @@ fun HomeBottomSheet(
             }
         }
     }
+}
+
+@Composable
+fun BottomSheetInput(
+    textValue: MutableState<String>,
+    onDoneClick: () -> Unit
+) {
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = textValue.value,
+        onValueChange = { textValue.value = it },
+        label = {
+            Text(text = "Restaurante")
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Store,
+                contentDescription = "Restaurant"
+            )
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            capitalization = KeyboardCapitalization.Words,
+        ),
+        keyboardActions = KeyboardActions(onDone = {
+            onDoneClick()
+        })
+    )
 }
 

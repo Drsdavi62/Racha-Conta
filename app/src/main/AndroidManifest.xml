@@ -26,7 +26,7 @@
             android:theme="@style/splashScreen">
 
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" android:theme="@style/AppThemeNotCompose"/>
     </application>
 
 </manifest>
