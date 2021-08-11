@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
                 BillSplitingAppTheme(application.isDark.value) {
 
                     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-                        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+                        bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
                     )
                     val coroutineScope = rememberCoroutineScope()
 
@@ -76,7 +77,8 @@ class HomeFragment : Fragment() {
                                 }
                             )
                         },
-                        sheetPeekHeight = 0.dp
+                        sheetPeekHeight = 0.dp,
+                        sheetShape = RoundedCornerShape(topStartPercent = 10 , topEndPercent = 10)
                     ) {
                         HomeScreen(
                             darkTheme = application.isDark.value,

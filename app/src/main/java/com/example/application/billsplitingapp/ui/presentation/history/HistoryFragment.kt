@@ -1,43 +1,40 @@
 package com.example.application.billsplitingapp.ui.presentation.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import com.example.application.billsplitingapp.BillSplitApp
+import com.example.application.billsplitingapp.MainActivity
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
-import com.example.application.billsplitingapp.ui.components.IconText
 import com.example.application.billsplitingapp.ui.theme.BillSplitingAppTheme
-import com.example.application.billsplitingapp.utils.Formatter
+import com.example.application.billsplitingapp.utils.Constants
 
 class HistoryFragment : Fragment() {
 
     private lateinit var viewModel: HistoryViewModel
     private lateinit var application: BillSplitApp
+
+    private val selectedIdList: MutableList<Int> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +60,45 @@ class HistoryFragment : Fragment() {
                             modifier = Modifier.padding(vertical = 16.dp)
                         )
 
+                        val selectionMode = remember {
+                            mutableStateOf(false)
+                        }
+
                         LazyColumn() {
                             itemsIndexed(list) { index, bill ->
-                                HistoryCardItem(index = index, bill = bill, personList = viewModel.getRelationList(list)) {
-                                    application::toggleDarkTheme
-                                }
+                                HistoryCardItem(
+                                    index = index,
+                                    bill = bill,
+                                    personList = viewModel.getRelationList(list),
+                                    selectionMode = selectionMode.value,
+                                    onClick = {
+                                        val prefs =
+                                            PreferenceManager.getDefaultSharedPreferences(
+                                                application
+                                            )
+                                        val editor = prefs.edit()
+                                        editor.putInt(Constants.BILL_ID, bill.id)
+                                        editor.apply()
+                                        val intent =
+                                            Intent(requireActivity(), MainActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                        intent.putExtra(Constants.BILL_NAME, bill.name)
+                                        startActivity(intent)
+                                    },
+                                    onLongPress = { selected, id ->
+                                        if (!selectionMode.value) {
+                                            selectionMode.value = true
+                                        }
+                                        if (selected) {
+                                            selectedIdList.add(id)
+                                        } else {
+                                            selectedIdList.remove(id)
+                                        }
+                                        if (selectedIdList.isEmpty()) {
+                                            selectionMode.value = false
+                                        }
+                                    }
+                                )
                             }
                         }
                     }
