@@ -40,12 +40,12 @@ fun DeleteButtonRow(
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete",
-                    tint = MaterialTheme.colors.background
+                    tint = MaterialTheme.colors.onSecondary
                 )
                 Text(
                     text = "Excluir",
                     style = MaterialTheme.typography.button,
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colors.onSecondary
                 )
             }
         }

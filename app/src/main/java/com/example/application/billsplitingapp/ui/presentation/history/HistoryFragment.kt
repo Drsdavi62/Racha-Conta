@@ -26,11 +26,13 @@ import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import com.example.application.billsplitingapp.BillSplitApp
 import com.example.application.billsplitingapp.MainActivity
+import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.DeleteButtonRow
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
 import com.example.application.billsplitingapp.ui.theme.BillSplitingAppTheme
 import com.example.application.billsplitingapp.utils.Constants
+import com.example.application.billsplitingapp.utils.addAllDistinct
 
 class HistoryFragment : Fragment() {
 
@@ -65,19 +67,17 @@ class HistoryFragment : Fragment() {
 
                             if (selectionMode.value) {
                                 DeleteButtonRow(
-                                    isAllSelected = selectedIdList.size == list.size,
+                                    isAllSelected = selectedIdList.size >= list.size,
                                     onCheckedChange = { checked ->
                                         if (checked) {
-                                            selectedIdList.addAll(list.map { it.id })
+                                            selectedIdList.addAllDistinct(list.map { it.id })
                                         } else {
                                             selectedIdList.clear()
                                             selectionMode.value = false
                                         }
                                     },
                                     onDeleteClick = {
-                                        viewModel.deleteBills(selectedIdList)
-                                        selectionMode.value = false
-                                        selectedIdList.clear()
+
                                     }
                                 )
                             } else {
