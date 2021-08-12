@@ -5,17 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -25,6 +27,7 @@ import androidx.preference.PreferenceManager
 import com.example.application.billsplitingapp.BillSplitApp
 import com.example.application.billsplitingapp.MainActivity
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
+import com.example.application.billsplitingapp.ui.components.DeleteButtonRow
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
 import com.example.application.billsplitingapp.ui.theme.BillSplitingAppTheme
 import com.example.application.billsplitingapp.utils.Constants
@@ -33,8 +36,6 @@ class HistoryFragment : Fragment() {
 
     private lateinit var viewModel: HistoryViewModel
     private lateinit var application: BillSplitApp
-
-    private val selectedIdList: MutableList<Int> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,17 +53,42 @@ class HistoryFragment : Fragment() {
                 BillSplitingAppTheme(application.isDark.value) {
                     Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 
-                        val list = viewModel.list.observeAsState(listOf()).value
+                        val selectedIdList: MutableList<Int> = remember { mutableStateListOf() }
 
-                        BackTitleHeader(
-                            title = "Histórico",
-                            navController = findNavController(),
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        )
+                        val list = viewModel.list.observeAsState(listOf()).value
 
                         val selectionMode = remember {
                             mutableStateOf(false)
                         }
+
+                        Box(modifier = Modifier.fillMaxWidth()) {
+
+                            if (selectionMode.value) {
+                                DeleteButtonRow(
+                                    isAllSelected = selectedIdList.size == list.size,
+                                    onCheckedChange = { checked ->
+                                        if (checked) {
+                                            selectedIdList.addAll(list.map { it.id })
+                                        } else {
+                                            selectedIdList.clear()
+                                            selectionMode.value = false
+                                        }
+                                    },
+                                    onDeleteClick = {
+                                        viewModel.deleteBills(selectedIdList)
+                                        selectionMode.value = false
+                                        selectedIdList.clear()
+                                    }
+                                )
+                            } else {
+                                BackTitleHeader(
+                                    title = "Histórico",
+                                    navController = findNavController(),
+                                    modifier = Modifier.padding(vertical = 16.dp)
+                                )
+                            }
+                        }
+
 
                         LazyColumn() {
                             itemsIndexed(list) { index, bill ->
@@ -71,6 +97,7 @@ class HistoryFragment : Fragment() {
                                     bill = bill,
                                     personList = viewModel.getRelationList(list),
                                     selectionMode = selectionMode.value,
+                                    isSelected = selectedIdList.contains(bill.id),
                                     onClick = {
                                         val prefs =
                                             PreferenceManager.getDefaultSharedPreferences(

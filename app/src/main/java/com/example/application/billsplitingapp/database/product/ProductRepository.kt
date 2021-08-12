@@ -50,6 +50,10 @@ class ProductRepository(private val context: Context) {
         productDao.deleteByBill(billId)
     }
 
+    suspend fun deleteByMultipleBills(billIds: List<Int>) {
+        productDao.deleteByMultipleBills(billIds)
+    }
+
     suspend fun getLastProduct(): ProductModel {
         return productDao.getLastProduct()
     }

@@ -25,6 +25,9 @@ interface ProductDao {
     @Query("DELETE FROM ProductModel WHERE billId = :billId")
     suspend fun deleteByBill(billId: Int)
 
+    @Query("DELETE FROM ProductModel WHERE billId in (:billIds)")
+    suspend fun deleteByMultipleBills(billIds: List<Int>)
+
     @Query("UPDATE ProductModel SET name = :name, price =:price, amount = :amount WHERE id = :id")
     suspend fun editProduct(id: Int, name: String, price: Float, amount : Int)
 

@@ -18,6 +18,9 @@ interface BillDao {
     @Query("DELETE FROM BillModel WHERE id = :id")
     suspend fun deleteBill(id : Int)
 
+    @Query("DELETE FROM BillModel WHERE id in (:ids)")
+    suspend fun deleteMultipleBills(ids : List<Int>)
+
     @Query("UPDATE BillModel SET name =:name WHERE id =:id")
     suspend fun editBill(id : Int, name : String)
 

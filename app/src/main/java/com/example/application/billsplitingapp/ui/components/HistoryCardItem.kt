@@ -29,17 +29,13 @@ fun HistoryCardItem(
     bill: BillModel,
     personList: List<List<PersonModel>>,
     selectionMode: Boolean,
+    isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: (Boolean, Int) -> Unit
 ) {
 
-    val isSelected = remember {
-        mutableStateOf(false)
-    }
-
     val longClick: (Int) -> Unit = { id ->
-        isSelected.value = !isSelected.value
-        onLongPress(isSelected.value, id)
+        onLongPress(!isSelected, id)
     }
 
     Card(
@@ -61,7 +57,7 @@ fun HistoryCardItem(
                 }
             ),
         border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-        backgroundColor = if (isSelected.value) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background
+        backgroundColor = if (isSelected) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
@@ -91,12 +87,12 @@ fun HistoryCardItem(
                 IconText(
                     icon = Icons.Filled.People,
                     text = personList[index].joinToString(", ") { it.name },
-                    iconTint = if (isSelected.value) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
                 )
                 IconText(
                     icon = Icons.Filled.DateRange,
                     text = bill.date,
-                    iconTint = if (isSelected.value) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
                 )
             }
         }

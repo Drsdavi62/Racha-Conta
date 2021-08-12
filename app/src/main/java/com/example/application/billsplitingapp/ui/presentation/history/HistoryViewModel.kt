@@ -21,14 +21,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     var list: LiveData<List<BillModel>> = billRepository.getList()
 
-    fun deleteBill(id: Int) {
+    fun deleteBills(ids: List<Int>) {
         CoroutineScope(Dispatchers.IO).launch {
-            billRepository.deleteBill(id)
-            productRepository.deleteByBill(id)
-            personRepository.deleteByBill(id)
+            billRepository.deleteMultipleBills(ids)
+            productRepository.deleteByMultipleBills(ids)
+            personRepository.deleteByMultipleBills(ids)
         }
-
     }
+
 
     fun setUp(list: List<BillModel>) {
         CoroutineScope(Dispatchers.IO).launch {

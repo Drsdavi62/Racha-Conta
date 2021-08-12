@@ -27,6 +27,10 @@ class BillRepository (private val context: Context) {
         billDao.deleteBill(id)
     }
 
+    suspend fun deleteMultipleBills(ids: List<Int>) {
+        billDao.deleteMultipleBills(ids)
+    }
+
     suspend fun setBillValue(id : Int, value : Float){
         billDao.setBillValue(id, value)
     }

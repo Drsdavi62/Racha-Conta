@@ -45,6 +45,10 @@ class PersonRepository(private val context: Context) {
         personDao.deleteByBill(billId)
     }
 
+    suspend fun deleteByMultipleBills(billIds: List<Int>) {
+        personDao.deleteByMultipleBills(billIds)
+    }
+
     suspend fun editPerson(id: Int, name: String) {
         personDao.editPersonName(id, name)
     }
