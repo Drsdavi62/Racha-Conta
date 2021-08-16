@@ -6,19 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.DismissDirection.*
+import androidx.compose.material.DismissValue.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +40,10 @@ import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.DeleteButtonRow
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
+import com.example.application.billsplitingapp.ui.components.SwipeToDeleteBackground
 import com.example.application.billsplitingapp.ui.theme.BillSplitingAppTheme
+import com.example.application.billsplitingapp.ui.theme.Blue400
+import com.example.application.billsplitingapp.ui.theme.Blue900
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.addAllDistinct
 
@@ -92,38 +105,60 @@ class HistoryFragment : Fragment() {
 
                         LazyColumn() {
                             itemsIndexed(list) { index, bill ->
-                                HistoryCardItem(
-                                    index = index,
-                                    bill = bill,
-                                    personList = viewModel.getRelationList(list),
-                                    selectionMode = selectionMode.value,
-                                    isSelected = selectedIdList.contains(bill.id),
-                                    onClick = {
-                                        val prefs =
-                                            PreferenceManager.getDefaultSharedPreferences(
-                                                application
-                                            )
-                                        val editor = prefs.edit()
-                                        editor.putInt(Constants.BILL_ID, bill.id)
-                                        editor.apply()
-                                        val intent =
-                                            Intent(requireActivity(), MainActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                        intent.putExtra(Constants.BILL_NAME, bill.name)
-                                        startActivity(intent)
+                                val dismissState = rememberDismissState(
+                                    confirmStateChange = {
+                                        if (it == DismissedToStart) {
+                                            viewModel.deleteBills(listOf(bill.id))
+                                        }
+                                        it != DismissedToStart
+                                    }
+                                )
+                                SwipeToDismiss(
+                                    state = dismissState,
+                                    directions = setOf(
+                                        EndToStart
+                                    ),
+                                    dismissThresholds = { direction ->
+                                        FractionalThreshold(if (direction == StartToEnd) 0.25f else 0.5f)
                                     },
-                                    onLongPress = { selected, id ->
-                                        if (!selectionMode.value) {
-                                            selectionMode.value = true
-                                        }
-                                        if (selected) {
-                                            selectedIdList.add(id)
-                                        } else {
-                                            selectedIdList.remove(id)
-                                        }
-                                        if (selectedIdList.isEmpty()) {
-                                            selectionMode.value = false
-                                        }
+                                    background = {
+                                        SwipeToDeleteBackground(dismissState = dismissState)
+                                    },
+                                    dismissContent = {
+                                        HistoryCardItem(
+                                            index = index,
+                                            bill = bill,
+                                            personList = viewModel.getRelationList(list),
+                                            selectionMode = selectionMode.value,
+                                            isSelected = selectedIdList.contains(bill.id),
+                                            onClick = {
+                                                val prefs =
+                                                    PreferenceManager.getDefaultSharedPreferences(
+                                                        application
+                                                    )
+                                                val editor = prefs.edit()
+                                                editor.putInt(Constants.BILL_ID, bill.id)
+                                                editor.apply()
+                                                val intent =
+                                                    Intent(requireActivity(), MainActivity::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                                intent.putExtra(Constants.BILL_NAME, bill.name)
+                                                startActivity(intent)
+                                            },
+                                            onLongPress = { selected, id ->
+                                                if (!selectionMode.value) {
+                                                    selectionMode.value = true
+                                                }
+                                                if (selected) {
+                                                    selectedIdList.add(id)
+                                                } else {
+                                                    selectedIdList.remove(id)
+                                                }
+                                                if (selectedIdList.isEmpty()) {
+                                                    selectionMode.value = false
+                                                }
+                                            }
+                                        )
                                     }
                                 )
                             }
