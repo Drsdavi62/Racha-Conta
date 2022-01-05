@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         android:name=".BillSplitApp">
         <activity
-            android:name=".ui.presentation.HomeActivity"
+            android:name=".ui.HomeActivity"
             android:exported="true"
             android:theme="@style/splashScreen"
             android:windowSoftInputMode="adjustPan|adjustResize">

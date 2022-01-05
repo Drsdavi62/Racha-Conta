@@ -1,19 +1,26 @@
 package com.example.application.billsplitingapp.ui.presentation.history
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.example.application.billsplitingapp.BillSplitApp
 import com.example.application.billsplitingapp.database.bill.BillRepository
 import com.example.application.billsplitingapp.database.person.PersonRepository
 import com.example.application.billsplitingapp.database.product.ProductRepository
 import com.example.application.billsplitingapp.models.BillModel
 import com.example.application.billsplitingapp.models.PersonModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class HistoryViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
+    @ApplicationContext val application: Context
+) : ViewModel() {
 
     private val billRepository = BillRepository(application)
     private val productRepository = ProductRepository(application)
