@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.models.BillModel
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.utils.Formatter
@@ -26,7 +27,7 @@ import com.example.application.billsplitingapp.utils.Formatter
 @Composable
 fun HistoryCardItem(
     index: Int,
-    bill: BillModel,
+    bill: Bill,
     personList: List<List<PersonModel>>,
     selectionMode: Boolean,
     isSelected: Boolean,
