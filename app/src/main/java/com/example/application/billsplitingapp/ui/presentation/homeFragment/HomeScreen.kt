@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.History
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,6 +28,7 @@ import com.example.application.billsplitingapp.ui.components.HomeBottomSheet
 import com.example.application.billsplitingapp.ui.components.HomeButton
 import com.example.application.billsplitingapp.ui.theme.NovaOvalRegular
 import com.example.application.billsplitingapp.utils.Constants
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -39,6 +41,30 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                HomeViewModel.UIEvent.ErrorCreatingBill -> {
+
+                }
+                is HomeViewModel.UIEvent.SuccessfullyCreatedBill -> {
+                    event.id?.let {
+                        val id = event.id
+                        val prefs =
+                            PreferenceManager.getDefaultSharedPreferences(context)
+                        val editor = prefs.edit()
+                        editor.putInt(Constants.BILL_ID, id)
+                        editor.apply()
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        intent.putExtra(Constants.BILL_NAME, "Bill name")
+                        context.startActivity(intent)
+                    }
+                }
+            }
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -53,16 +79,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
-                    val id = viewModel.insertBill(text)
-                    val prefs =
-                        PreferenceManager.getDefaultSharedPreferences(context)
-                    val editor = prefs.edit()
-                    editor.putInt(Constants.BILL_ID, id)
-                    editor.apply()
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    intent.putExtra(Constants.BILL_NAME, text)
-                    context.startActivity(intent)
+                    viewModel.createBill(text)
                 }
             )
         },

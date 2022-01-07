@@ -13,7 +13,7 @@ interface BillDao {
     suspend fun getBillById(id: Int): BillEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBill(billEntity: BillEntity)
+    suspend fun insertBill(billEntity: BillEntity): Long
 
     @Delete
     suspend fun deleteBill(billEntity: BillEntity)

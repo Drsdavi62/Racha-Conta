@@ -106,7 +106,6 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                 HistoryCardItem(
                                     index = index,
                                     bill = bill,
-                                    personList = viewModel.getRelationList(state.bills),
                                     selectionMode = selectionMode.value,
                                     isSelected = selectedIdList.contains(bill.id),
                                     onClick = {

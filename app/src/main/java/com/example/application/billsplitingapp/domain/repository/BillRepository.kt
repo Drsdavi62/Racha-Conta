@@ -9,7 +9,7 @@ interface BillRepository {
 
     suspend fun getBillById(id: Int): Resource<Bill>
 
-    suspend fun insertBill(bill: Bill): Resource<Bill>
+    suspend fun insertBill(bill: Bill): Int
 
     suspend fun deleteBill(bill: Bill)
 }

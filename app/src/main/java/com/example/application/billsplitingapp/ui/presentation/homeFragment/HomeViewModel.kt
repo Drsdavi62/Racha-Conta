@@ -1,27 +1,33 @@
 package com.example.application.billsplitingapp.ui.presentation.homeFragment
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.application.billsplitingapp.BillSplitApp
-import com.example.application.billsplitingapp.database.bill.BillRepository
+import androidx.lifecycle.viewModelScope
+import com.example.application.billsplitingapp.domain.use_case.CreateNewBill
+import com.example.application.billsplitingapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.runBlocking
-import java.text.DateFormat
-import java.util.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @ApplicationContext val application: Context
+    val createNewBill: CreateNewBill
 ) : ViewModel() {
 
-    private val billRepository = BillRepository(application)
+    private val _eventFlow = MutableSharedFlow<UIEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
-    fun insertBill(name: String): Int = runBlocking {
-        return@runBlocking billRepository.insertBill(
-            name,
-            DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().time)
-        ).toInt()
+    fun createBill(name: String) {
+        viewModelScope.launch {
+            val id = createNewBill(name)
+            _eventFlow.emit(UIEvent.SuccessfullyCreatedBill(id))
+        }
+    }
+
+    sealed class UIEvent {
+        data class SuccessfullyCreatedBill(val id: Int?) : UIEvent()
+        object ErrorCreatingBill: UIEvent()
     }
 }

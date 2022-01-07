@@ -25,6 +25,7 @@ data class ProductEntity(
 
     var name: String,
     var value: Float,
+    var amount: Int,
 
     var people: List<PersonEntity>
 )
@@ -35,6 +36,7 @@ fun ProductEntity.toProduct(): Product {
         billId = billId,
         name = name,
         value = value,
+        amount = amount,
         people = people.map { it.toPerson() }
     )
 }
@@ -45,6 +47,7 @@ fun Product.toProductEntity(): ProductEntity {
         billId = billId,
         name = name,
         value = value,
+        amount = amount,
         people = people.map { it.toPersonEntity() }
     )
 }

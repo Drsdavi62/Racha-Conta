@@ -5,5 +5,6 @@ data class Product(
     var billId: Int,
     var name: String,
     var value: Float,
+    var amount: Int,
     var people: List<Person>
 )

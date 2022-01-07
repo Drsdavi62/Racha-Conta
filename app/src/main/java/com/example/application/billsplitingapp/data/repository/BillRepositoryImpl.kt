@@ -31,13 +31,9 @@ class BillRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertBill(bill: Bill): Resource<Bill> {
-        return try {
-            dao.insertBill(bill.toBillEntity())
-            Resource.Success<Bill>(data = bill)
-        } catch (e: Exception) {
-            Resource.Error<Bill>(message = e.localizedMessage ?: "Unknown Error")
-        }
+    override suspend fun insertBill(bill: Bill): Int {
+            val insertedId = dao.insertBill(bill.toBillEntity())
+            return insertedId.toInt()
     }
 
     override suspend fun deleteBill(bill: Bill) {

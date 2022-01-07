@@ -28,7 +28,6 @@ import com.example.application.billsplitingapp.utils.Formatter
 fun HistoryCardItem(
     index: Int,
     bill: Bill,
-    personList: List<List<PersonModel>>,
     selectionMode: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -87,7 +86,7 @@ fun HistoryCardItem(
             ) {
                 IconText(
                     icon = Icons.Filled.People,
-                    text = personList[index].joinToString(", ") { it.name },
+                    text = bill.people.map { it.name }.joinToString(", "),
                     iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
                 )
                 IconText(
