@@ -79,7 +79,8 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
-                    viewModel.createBill(text)
+//                    viewModel.createBill(text)
+                    navController.navigate(Screen.Bill.route)
                 }
             )
         },
