@@ -1,6 +1,5 @@
 package com.example.application.billsplitingapp.ui.presentation.history
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,14 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.preference.PreferenceManager
-import com.example.application.billsplitingapp.MainActivity
 import com.example.application.billsplitingapp.domain.model.Bill
+import com.example.application.billsplitingapp.ui.Screen
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.DeleteButtonRow
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
 import com.example.application.billsplitingapp.ui.components.SwipeToDeleteBackground
-import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.addAllDistinct
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -81,7 +78,7 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                     text = "Nenhuma comanda ainda :(",
                     textAlign = TextAlign.Center
                 )
-            } else if(state.bills.isNotEmpty() && !state.isLoading) {
+            } else if (state.bills.isNotEmpty() && !state.isLoading) {
                 LazyColumn() {
                     itemsIndexed(state.bills) { index, bill ->
                         val dismissState = rememberDismissState(
@@ -110,18 +107,7 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                     selectionMode = selectionMode.value,
                                     isSelected = selectedBillList.contains(bill),
                                     onClick = {
-                                        val prefs =
-                                            PreferenceManager.getDefaultSharedPreferences(
-                                                context
-                                            )
-                                        val editor = prefs.edit()
-                                        editor.putInt(Constants.BILL_ID, bill.id)
-                                        editor.apply()
-                                        val intent =
-                                            Intent(context, MainActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                        intent.putExtra(Constants.BILL_NAME, bill.name)
-                                        context.startActivity(intent)
+                                        navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
                                     },
                                     onLongPress = { selected, bill ->
                                         if (!selectionMode.value) {

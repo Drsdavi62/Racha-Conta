@@ -48,7 +48,7 @@ fun BackTitleHeader(
         }
 
         Text(
-            text = "Histórico",
+            text = title,
             style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.constrainAs(titleRef) {

@@ -49,17 +49,18 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 
                 }
                 is HomeViewModel.UIEvent.SuccessfullyCreatedBill -> {
-                    event.id?.let {
-                        val id = event.id
-                        val prefs =
-                            PreferenceManager.getDefaultSharedPreferences(context)
-                        val editor = prefs.edit()
-                        editor.putInt(Constants.BILL_ID, id)
-                        editor.apply()
-                        val intent = Intent(context, MainActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        intent.putExtra(Constants.BILL_NAME, "Bill name")
-                        context.startActivity(intent)
+                    event.id?.let { billId ->
+//                        val id = event.id
+//                        val prefs =
+//                            PreferenceManager.getDefaultSharedPreferences(context)
+//                        val editor = prefs.edit()
+//                        editor.putInt(Constants.BILL_ID, id)
+//                        editor.apply()
+//                        val intent = Intent(context, MainActivity::class.java)
+//                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                        intent.putExtra(Constants.BILL_NAME, "Bill name")
+//                        context.startActivity(intent)
+                        navController.navigate(Screen.Bill.route + "/?billId=$billId")
                     }
                 }
             }
@@ -76,11 +77,11 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                     }
                 },
                 onDoneClick = { text ->
+                    if (text.isEmpty()) return@HomeBottomSheet
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
-//                    viewModel.createBill(text)
-                    navController.navigate(Screen.Bill.route)
+                    viewModel.createBill(text)
                 }
             )
         },

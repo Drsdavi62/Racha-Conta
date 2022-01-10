@@ -21,12 +21,12 @@ class BillRepositoryImpl @Inject constructor(
         return dao.getBills().map { billEntities -> billEntities.map { it.toBill() } }
     }
 
-    override suspend fun getBillById(id: Int): Resource<Bill> {
+    override suspend fun getBillById(id: Int): Bill? {
         return try {
             val bill = dao.getBillById(id).toBill()
-            Resource.Success<Bill>(data = bill)
+            bill
         } catch (e: Exception) {
-            Resource.Error<Bill>(message = e.localizedMessage ?: "Unknown Error")
+            null
         }
     }
 

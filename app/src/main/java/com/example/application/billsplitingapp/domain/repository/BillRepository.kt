@@ -8,7 +8,7 @@ interface BillRepository {
 
     fun getBills(): Flow<List<Bill>>
 
-    suspend fun getBillById(id: Int): Resource<Bill>
+    suspend fun getBillById(id: Int): Bill?
 
     suspend fun insertBill(bill: Bill): Int
 

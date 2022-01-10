@@ -44,9 +44,10 @@ class HomeActivity : ComponentActivity() {
                             HistoryScreen(navController)
                         }
                         composable(
-                            route = Screen.Bill.route
+                            route = Screen.Bill.route + "/?billId={billId}",
+                            arguments = Screen.Bill.arguments
                         ) {
-                            BillScreen()
+                            BillScreen(navController)
                         }
                     }
                 }
