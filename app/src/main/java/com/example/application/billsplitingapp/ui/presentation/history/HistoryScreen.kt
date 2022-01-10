@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.preference.PreferenceManager
 import com.example.application.billsplitingapp.MainActivity
+import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.components.DeleteButtonRow
 import com.example.application.billsplitingapp.ui.components.HistoryCardItem
@@ -30,7 +31,7 @@ import com.example.application.billsplitingapp.utils.addAllDistinct
 @Composable
 fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hiltViewModel()) {
 
-    val selectedIdList: MutableList<Int> = remember { mutableStateListOf() }
+    val selectedBillList: MutableList<Bill> = remember { mutableStateListOf() }
 
     val state = viewModel.state.value
 
@@ -52,17 +53,17 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
 
                 if (selectionMode.value) {
                     DeleteButtonRow(
-                        isAllSelected = selectedIdList.size >= state.bills.size,
+                        isAllSelected = selectedBillList.size >= state.bills.size,
                         onCheckedChange = { checked ->
                             if (checked) {
-                                selectedIdList.addAllDistinct(state.bills.map { it.id })
+                                selectedBillList.addAllDistinct(state.bills)
                             } else {
-                                selectedIdList.clear()
+                                selectedBillList.clear()
                                 selectionMode.value = false
                             }
                         },
                         onDeleteClick = {
-
+                            viewModel.deleteBills(selectedBillList)
                         }
                     )
                 } else {
@@ -86,7 +87,7 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                         val dismissState = rememberDismissState(
                             confirmStateChange = {
                                 if (it == DismissValue.DismissedToStart) {
-                                    viewModel.deleteBills(listOf(bill.id))
+                                    viewModel.deleteBills(listOf(bill))
                                 }
                                 it != DismissValue.DismissedToStart
                             }
@@ -107,7 +108,7 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                     index = index,
                                     bill = bill,
                                     selectionMode = selectionMode.value,
-                                    isSelected = selectedIdList.contains(bill.id),
+                                    isSelected = selectedBillList.contains(bill),
                                     onClick = {
                                         val prefs =
                                             PreferenceManager.getDefaultSharedPreferences(
@@ -122,16 +123,16 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                         intent.putExtra(Constants.BILL_NAME, bill.name)
                                         context.startActivity(intent)
                                     },
-                                    onLongPress = { selected, id ->
+                                    onLongPress = { selected, bill ->
                                         if (!selectionMode.value) {
                                             selectionMode.value = true
                                         }
                                         if (selected) {
-                                            selectedIdList.add(id)
+                                            selectedBillList.add(bill)
                                         } else {
-                                            selectedIdList.remove(id)
+                                            selectedBillList.remove(bill)
                                         }
-                                        if (selectedIdList.isEmpty()) {
+                                        if (selectedBillList.isEmpty()) {
                                             selectionMode.value = false
                                         }
                                     }

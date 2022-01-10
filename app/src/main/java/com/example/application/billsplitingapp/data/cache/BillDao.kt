@@ -2,12 +2,13 @@ package com.example.application.billsplitingapp.data.cache
 
 import androidx.room.*
 import com.example.application.billsplitingapp.data.cache.model.BillEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BillDao {
 
     @Query("SELECT * FROM billentity")
-    suspend fun getBills(): List<BillEntity>
+    fun getBills(): Flow<List<BillEntity>>
 
     @Query("SELECT * FROM billentity WHERE id = :id")
     suspend fun getBillById(id: Int): BillEntity

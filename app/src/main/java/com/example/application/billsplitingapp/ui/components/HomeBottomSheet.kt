@@ -76,7 +76,8 @@ fun HomeBottomSheet(
                         textValue.value = ""
                     },
                     shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.width(maxWidth / 2 - 40.dp)
+                    modifier = Modifier.width(maxWidth / 2 - 40.dp),
+                    enabled = textValue.value.isNotEmpty()
                 ) {
                     Text(text = "Criar")
                 }

@@ -31,11 +31,11 @@ fun HistoryCardItem(
     selectionMode: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
-    onLongPress: (Boolean, Int) -> Unit
+    onLongPress: (Boolean, Bill) -> Unit
 ) {
 
-    val longClick: (Int) -> Unit = { id ->
-        onLongPress(!isSelected, id)
+    val longClick: (Bill) -> Unit = { bill ->
+        onLongPress(!isSelected, bill)
     }
 
     Card(
@@ -47,13 +47,13 @@ fun HistoryCardItem(
             .combinedClickable(
                 onClick = {
                     if (selectionMode) {
-                        longClick(bill.id)
+                        longClick(bill)
                     } else {
                         onClick()
                     }
                 },
                 onLongClick = {
-                    longClick(bill.id)
+                    longClick(bill)
                 }
             ),
         border = BorderStroke(2.dp, MaterialTheme.colors.primary),

@@ -7,19 +7,18 @@ import com.example.application.billsplitingapp.data.cache.model.toBillEntity
 import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.domain.repository.BillRepository
 import com.example.application.billsplitingapp.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class BillRepositoryImpl @Inject constructor(
     private val dao: BillDao
 ) : BillRepository {
 
-    override suspend fun getBills(): Resource<List<Bill>> {
-        return try {
-            val bills = dao.getBills().map { it.toBill() }
-            Resource.Success<List<Bill>>(data = bills)
-        } catch (e: Exception) {
-            Resource.Error<List<Bill>>(message = e.localizedMessage ?: "Unknown Error")
-        }
+    override fun getBills(): Flow<List<Bill>> {
+        return dao.getBills().map { billEntities -> billEntities.map { it.toBill() } }
     }
 
     override suspend fun getBillById(id: Int): Resource<Bill> {
