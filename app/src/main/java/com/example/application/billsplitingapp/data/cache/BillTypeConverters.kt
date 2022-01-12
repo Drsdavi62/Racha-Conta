@@ -7,13 +7,13 @@ import com.google.gson.Gson
 
 class BillTypeConverters {
     @TypeConverter
-    fun personListToJson(value: List<PersonEntity>?) = Gson().toJson(value)
+    fun personListToJson(value: List<PersonEntity>?): String = Gson().toJson(value)
 
     @TypeConverter
     fun jsonToPersonList(value: String) = Gson().fromJson(value, Array<PersonEntity>::class.java).toList()
 
     @TypeConverter
-    fun productListToJson(value: List<ProductEntity>?) = Gson().toJson(value)
+    fun productListToJson(value: List<ProductEntity>?): String = Gson().toJson(value)
 
     @TypeConverter
     fun jsonToProductList(value: String) = Gson().fromJson(value, Array<ProductEntity>::class.java).toList()

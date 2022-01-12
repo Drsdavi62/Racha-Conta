@@ -2,12 +2,13 @@ package com.example.application.billsplitingapp.data.cache
 
 import androidx.room.*
 import com.example.application.billsplitingapp.data.cache.model.ProductEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
 
     @Query("SELECT * FROM productentity WHERE billId = :billId")
-    suspend fun getProductsFromBill(billId: Int): List<ProductEntity>
+    fun getProductsFromBill(billId: Int): Flow<List<ProductEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(productEntity: ProductEntity)

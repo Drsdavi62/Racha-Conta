@@ -2,28 +2,28 @@ package com.example.application.billsplitingapp.data.repository
 
 
 import com.example.application.billsplitingapp.data.cache.BillDao
-import com.example.application.billsplitingapp.data.cache.model.toBill
-import com.example.application.billsplitingapp.data.cache.model.toBillEntity
+import com.example.application.billsplitingapp.data.cache.PersonDao
+import com.example.application.billsplitingapp.data.cache.ProductDao
+import com.example.application.billsplitingapp.data.cache.model.*
 import com.example.application.billsplitingapp.domain.model.Bill
+import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.repository.BillRepository
-import com.example.application.billsplitingapp.utils.Resource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class BillRepositoryImpl @Inject constructor(
-    private val dao: BillDao
+    private val billDao: BillDao,
+    private val productDao: ProductDao,
+    private val personDao: PersonDao
 ) : BillRepository {
 
     override fun getBills(): Flow<List<Bill>> {
-        return dao.getBills().map { billEntities -> billEntities.map { it.toBill() } }
+        return billDao.getBills().map { billEntities -> billEntities.map { it.toBill() } }
     }
 
     override suspend fun getBillById(id: Int): Bill? {
         return try {
-            val bill = dao.getBillById(id).toBill()
+            val bill = billDao.getBillById(id).toBill()
             bill
         } catch (e: Exception) {
             null
@@ -31,11 +31,19 @@ class BillRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertBill(bill: Bill): Int {
-            val insertedId = dao.insertBill(bill.toBillEntity())
+            val insertedId = billDao.insertBill(bill.toBillEntity())
             return insertedId.toInt()
     }
 
     override suspend fun deleteBill(bill: Bill) {
-        dao.deleteBill(bill.toBillEntity())
+        billDao.deleteBill(bill.toBillEntity())
+    }
+
+    override suspend fun insertProduct(product: Product) {
+        productDao.insertProduct(product.toProductEntity())
+    }
+
+    override fun getProductsFromBill(billId: Int): Flow<List<Product>> {
+        return productDao.getProductsFromBill(billId).map { productEntities -> productEntities.map { it.toProduct() } }
     }
 }

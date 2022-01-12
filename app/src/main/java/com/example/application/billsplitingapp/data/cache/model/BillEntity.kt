@@ -1,11 +1,12 @@
 package com.example.application.billsplitingapp.data.cache.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.application.billsplitingapp.domain.model.Bill
 
 @Entity
-data class BillEntity(
+data class BillEntity constructor(
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
@@ -14,9 +15,11 @@ data class BillEntity(
     var value: Float,
     var date: String,
 
-    var products: List<ProductEntity>,
-    var people: List<PersonEntity>
-)
+    @Ignore var products: List<ProductEntity>? = null,
+    @Ignore var people: List<PersonEntity>? = null
+) {
+    constructor(id: Int, name: String, value: Float, date: String): this(id, name,  value, date, null, null)
+}
 
 fun BillEntity.toBill(): Bill {
     return Bill(
@@ -24,8 +27,8 @@ fun BillEntity.toBill(): Bill {
         name = name,
         value = value,
         date = date,
-        products = products.map { it.toProduct() },
-        people = people.map { it.toPerson() }
+        products = products?.map { it.toProduct() } ?: emptyList(),
+        people = people?.map { it.toPerson() } ?: emptyList()
     )
 }
 

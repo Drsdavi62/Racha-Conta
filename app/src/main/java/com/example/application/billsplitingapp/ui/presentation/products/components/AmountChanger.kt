@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.ui.presentation.bill.products.components
+package com.example.application.billsplitingapp.ui.presentation.products.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon

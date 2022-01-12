@@ -3,6 +3,7 @@ package com.example.application.billsplitingapp.data.cache.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.application.billsplitingapp.domain.model.Product
 
@@ -27,8 +28,11 @@ data class ProductEntity(
     var value: Float,
     var amount: Int,
 
-    var people: List<PersonEntity>
-)
+    @Ignore
+    var people: List<PersonEntity>? = null
+) {
+    constructor(id: Int, billId: Int, name: String, value: Float, amount: Int): this(id, billId, name, value, amount, null)
+}
 
 fun ProductEntity.toProduct(): Product {
     return Product(
@@ -37,7 +41,7 @@ fun ProductEntity.toProduct(): Product {
         name = name,
         value = value,
         amount = amount,
-        people = people.map { it.toPerson() }
+        people = people?.map { it.toPerson() } ?: emptyList()
     )
 }
 

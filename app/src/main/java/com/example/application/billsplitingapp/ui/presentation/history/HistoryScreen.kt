@@ -110,17 +110,18 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                         navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
                                     },
                                     onLongPress = { selected, bill ->
-                                        if (!selectionMode.value) {
-                                            selectionMode.value = true
-                                        }
-                                        if (selected) {
-                                            selectedBillList.add(bill)
-                                        } else {
-                                            selectedBillList.remove(bill)
-                                        }
-                                        if (selectedBillList.isEmpty()) {
-                                            selectionMode.value = false
-                                        }
+                                        navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
+//                                        if (!selectionMode.value) {
+//                                            selectionMode.value = true
+//                                        }
+//                                        if (selected) {
+//                                            selectedBillList.add(bill)
+//                                        } else {
+//                                            selectedBillList.remove(bill)
+//                                        }
+//                                        if (selectedBillList.isEmpty()) {
+//                                            selectionMode.value = false
+//                                        }
                                     }
                                 )
                             }

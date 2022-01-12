@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.ui.presentation.bill.products.components
+package com.example.application.billsplitingapp.ui.presentation.products.components
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.Canvas
@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +56,7 @@ fun ProductItem(
 
             val clipPath = Path().apply {
                 lineTo(0f, size.height)
-                if (isLast) {
+                if (isLast && !isFirst) {
                     lineTo(size.width, size.height)
                 } else {
                     for (i in 1..tickAmount) {
@@ -68,7 +67,7 @@ fun ProductItem(
                         }
                     }
                 }
-                if (isFirst) {
+                if (isFirst && !isLast) {
                     lineTo(size.width, 0f)
                     close()
                 } else {
@@ -87,7 +86,7 @@ fun ProductItem(
             clipPath(clipPath) {
                 drawRoundRect(
                     color = color,
-                    alpha = .5f,
+                    alpha = 0.3f,
                     size = size,
                 )
             }
