@@ -15,3 +15,5 @@ val Orange500 = Color(0xFFff510c)
 val Orange400 = Color(0xFFff6d38)
 
 val Teal200 = Color(0xFF00efbb)
+
+val MoneyGreen = Color(0xFF316B3E)

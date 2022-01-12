@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.ui.presentation.bill.People
+package com.example.application.billsplitingapp.ui.presentation.bill.people
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

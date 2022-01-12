@@ -15,8 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
-import com.example.application.billsplitingapp.ui.presentation.bill.People.PeopleScreen
-import com.example.application.billsplitingapp.ui.presentation.bill.Products.ProductScreen
+import com.example.application.billsplitingapp.ui.presentation.bill.people.PeopleScreen
+import com.example.application.billsplitingapp.ui.presentation.bill.products.ProductScreen
 
 @Composable
 fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hiltViewModel()) {
@@ -34,16 +34,16 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
         bottomBar = {
             BottomNavigationBar(navController, bottomNavigationItems)
         }
-    ) {
-        Column {
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
             BackTitleHeader(
                 title = bill?.name ?: "Comanda",
                 navController = mainNavController,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
             NavHost(navController, startDestination = BottomNavigationScreen.Products.route) {
                 composable(BottomNavigationScreen.Products.route) {
-                    ProductScreen()
+                    ProductScreen(viewModel = viewModel)
                 }
                 composable(BottomNavigationScreen.People.route) {
                     PeopleScreen()
