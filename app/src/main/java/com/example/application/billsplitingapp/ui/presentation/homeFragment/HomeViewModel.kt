@@ -2,12 +2,10 @@ package com.example.application.billsplitingapp.ui.presentation.homeFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.application.billsplitingapp.domain.use_case.CreateNewBill
-import com.example.application.billsplitingapp.utils.Resource
+import com.example.application.billsplitingapp.domain.use_case.bill.CreateNewBill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

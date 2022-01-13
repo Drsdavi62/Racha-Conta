@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AmountChanger(
     amount: Int,
-    onPlusClick: () -> Unit,
-    onMinusClick: () -> Unit
+    onPlusClick: (Int) -> Unit,
+    onMinusClick: (Int) -> Unit
 ) {
 
     Column(
@@ -27,8 +27,10 @@ fun AmountChanger(
             .padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton (
-            onClick = onPlusClick,
+        IconButton(
+            onClick = {
+                onPlusClick(amount + 1)
+            },
             modifier = Modifier.wrapContentSize()
         ) {
             Icon(
@@ -44,9 +46,10 @@ fun AmountChanger(
             style = MaterialTheme.typography.body1,
             fontWeight = FontWeight.Bold
         )
-        IconButton (
-            onClick = onMinusClick,
-            modifier = Modifier.wrapContentSize()
+        IconButton(
+            onClick = { onMinusClick(amount - 1) },
+            modifier = Modifier.wrapContentSize(),
+            enabled = amount > 1
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,

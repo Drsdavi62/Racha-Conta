@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.domain.use_case
+package com.example.application.billsplitingapp.domain.use_case.product
 
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.repository.BillRepository

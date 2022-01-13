@@ -30,14 +30,16 @@ fun ProductItem(
     product: Product,
     isFirst: Boolean,
     isLast: Boolean,
-    onPlusAmountClick: () -> Unit,
-    onMinusAmountClick: () -> Unit,
+    onPlusAmountClick: (Int, Int) -> Unit,
+    onMinusAmountClick: (Int, Int) -> Unit,
     onEditClick: () -> Unit
 ) {
 
     val tickAmount = 34
 
     val isExpanded = remember { mutableStateOf(false) }
+
+    val fullValue by lazy { product.value * product.amount }
 
     Box(
         modifier = Modifier
@@ -108,8 +110,12 @@ fun ProductItem(
                 ) {
                     AmountChanger(
                         amount = product.amount,
-                        onPlusClick = onPlusAmountClick,
-                        onMinusClick = onMinusAmountClick
+                        onPlusClick = { amount ->
+                            onPlusAmountClick(product.id, amount)
+                        },
+                        onMinusClick = { amount ->
+                            onMinusAmountClick(product.id, amount)
+                        }
                     )
                     Column {
                         Text(
@@ -145,7 +151,7 @@ fun ProductItem(
                         .wrapContentWidth(Alignment.End)
                 ) {
                     Text(
-                        text = Formatter.currencyFormat(product.value),
+                        text = Formatter.currencyFormat(product.value * product.amount),
                         style = MaterialTheme.typography.body1,
                         fontWeight = FontWeight.Bold,
                         color = MoneyGreen
@@ -183,13 +189,13 @@ fun ProductItem(
                         )
                         Column {
                             Text(
-                                text = Formatter.currencyFormat(product.value),
+                                text = Formatter.currencyFormat(fullValue),
                                 style = MaterialTheme.typography.h6,
                                 fontWeight = FontWeight.Bold,
                                 color = MoneyGreen
                             )
                             Text(
-                                text = Formatter.currencyFormat(product.value / product.amount) + " cada",
+                                text = Formatter.currencyFormat(product.value) + " cada",
                                 style = MaterialTheme.typography.caption,
                                 color = MoneyGreen
                             )

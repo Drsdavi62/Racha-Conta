@@ -56,4 +56,8 @@ class BillRepositoryImpl @Inject constructor(
     override suspend fun updateBillValue(billId: Int, value: Float) {
         billDao.updateBillValue(billId, value)
     }
+
+    override suspend fun updateProductAmount(productId: Int, amount: Int) {
+        productDao.updateAmount(productId, amount)
+    }
 }

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.domain.model.Product
-import com.example.application.billsplitingapp.domain.use_case.InsertProduct
-import com.example.application.billsplitingapp.domain.use_case.UpdateBillValue
+import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
+import com.example.application.billsplitingapp.domain.use_case.bill.UpdateBillValue
 import com.example.application.billsplitingapp.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

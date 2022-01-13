@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.domain.use_case
+package com.example.application.billsplitingapp.domain.use_case.bill
 
 import com.example.application.billsplitingapp.domain.repository.BillRepository
 import javax.inject.Inject

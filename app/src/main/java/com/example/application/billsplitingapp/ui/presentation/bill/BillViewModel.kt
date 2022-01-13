@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.domain.model.Product
-import com.example.application.billsplitingapp.domain.use_case.GetBill
-import com.example.application.billsplitingapp.ui.Screen
+import com.example.application.billsplitingapp.domain.use_case.bill.GetBill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

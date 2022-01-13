@@ -20,4 +20,6 @@ interface BillRepository {
     fun getProductsFromBill(billId: Int): Flow<List<Product>>
 
     suspend fun updateBillValue(billId: Int, value: Float)
+
+    suspend fun updateProductAmount(productId: Int, amount: Int)
 }

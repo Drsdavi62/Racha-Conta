@@ -5,11 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Bill
-import com.example.application.billsplitingapp.domain.use_case.DeleteBill
-import com.example.application.billsplitingapp.domain.use_case.GetBills
-import com.example.application.billsplitingapp.models.BillModel
-import com.example.application.billsplitingapp.models.PersonModel
-import com.example.application.billsplitingapp.utils.Resource
+import com.example.application.billsplitingapp.domain.use_case.bill.DeleteBill
+import com.example.application.billsplitingapp.domain.use_case.bill.GetBills
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
