@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.use_case.InsertProduct
+import com.example.application.billsplitingapp.domain.use_case.UpdateBillValue
 import com.example.application.billsplitingapp.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val insertProductUseCase: InsertProduct
+    private val insertProductUseCase: InsertProduct,
+    private val updateBillValue: UpdateBillValue
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<String>()
@@ -41,6 +43,7 @@ class AddEditProductViewModel @Inject constructor(
                     people = people
                 )
             )
+            updateBillValue(billId, value * amount)
             _eventFlow.emit("foi")
         }
     }

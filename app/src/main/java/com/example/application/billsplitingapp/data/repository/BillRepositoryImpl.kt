@@ -18,7 +18,13 @@ class BillRepositoryImpl @Inject constructor(
 ) : BillRepository {
 
     override fun getBills(): Flow<List<Bill>> {
-        return billDao.getBills().map { billEntities -> billEntities.map { it.toBill() } }
+        return billDao.getBills().map { billEntities ->
+            var final: MutableList<BillEntity>
+            billEntities.forEach { billEntity ->
+                billEntity.people = personDao.getPeopleFromBill(billEntity.id)
+            }
+            billEntities.map { it.toBill() }
+        }
     }
 
     override suspend fun getBillById(id: Int): Bill? {
@@ -45,5 +51,9 @@ class BillRepositoryImpl @Inject constructor(
 
     override fun getProductsFromBill(billId: Int): Flow<List<Product>> {
         return productDao.getProductsFromBill(billId).map { productEntities -> productEntities.map { it.toProduct() } }
+    }
+
+    override suspend fun updateBillValue(billId: Int, value: Float) {
+        billDao.updateBillValue(billId, value)
     }
 }

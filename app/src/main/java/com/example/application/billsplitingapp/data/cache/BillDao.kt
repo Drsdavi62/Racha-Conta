@@ -16,6 +16,9 @@ interface BillDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBill(billEntity: BillEntity): Long
 
+    @Query("UPDATE billentity SET value = :value WHERE id = :id")
+    suspend fun updateBillValue(id: Int, value: Float)
+
     @Delete
     suspend fun deleteBill(billEntity: BillEntity)
 }
