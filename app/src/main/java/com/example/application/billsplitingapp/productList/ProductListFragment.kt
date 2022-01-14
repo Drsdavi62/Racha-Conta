@@ -98,7 +98,7 @@ class ProductListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.product_recycler)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.hasFixedSize()
-        totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
+        totalValue.text = Formatter.currencyFormatFromFloat(prefs.getFloat(Constants.TOTAL, 0f))
 
         viewModel.list.observe(viewLifecycleOwner, Observer { productList ->
 
@@ -114,7 +114,7 @@ class ProductListFragment : Fragment() {
                 viewModel.setBillValue(priceList.sum())
                 editor.putFloat(Constants.TOTAL, priceList.sum())
                 editor.apply()
-                totalValue.text = Formatter.currencyFormat(prefs.getFloat(Constants.TOTAL, 0f))
+                totalValue.text = Formatter.currencyFormatFromFloat(prefs.getFloat(Constants.TOTAL, 0f))
             }
 
             val rList = viewModel.getRelations(productList)

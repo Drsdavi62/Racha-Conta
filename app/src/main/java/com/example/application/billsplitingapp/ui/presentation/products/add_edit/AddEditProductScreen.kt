@@ -8,8 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Money
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -18,7 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.application.billsplitingapp.ui.presentation.products.components.HorizontalAmountSelector
+import com.example.application.billsplitingapp.ui.presentation.products.components.TotalValueAnimated
+import com.example.application.billsplitingapp.utils.Formatter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddEditProductScreen(
@@ -31,6 +34,12 @@ fun AddEditProductScreen(
     val amount = viewModel.amount.value
 
     val value = viewModel.value.value
+
+    val isTotalBig = remember {
+        mutableStateOf(false)
+    }
+
+    val composableScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -78,6 +87,8 @@ fun AddEditProductScreen(
                         Icon(imageVector = Icons.Default.AttachMoney, contentDescription = "Price")
                     }
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                TotalValueAnimated(value = Formatter.currencyFormatFromFloat(viewModel.fullValue), triggered = isTotalBig.value)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -90,7 +101,14 @@ fun AddEditProductScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 HorizontalAmountSelector(
                     amount = amount,
-                    onAmountChange = { viewModel.onEvent(AddEditProductEvents.ChangedAmount(it)) })
+                    onAmountChange = {
+                        viewModel.onEvent(AddEditProductEvents.ChangedAmount(it))
+                        composableScope.launch {
+                            isTotalBig.value = true
+                            delay(250)
+                            isTotalBig.value = false
+                        }
+                    })
             }
         }
 

@@ -12,15 +12,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Bill
-import com.example.application.billsplitingapp.models.BillModel
-import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.utils.Formatter
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -76,7 +72,7 @@ fun HistoryCardItem(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = Formatter.currencyFormat(bill.value),
+                    text = Formatter.currencyFormatFromFloat(bill.value),
                     style = MaterialTheme.typography.h6
                 )
             }

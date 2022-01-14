@@ -1,13 +1,10 @@
 package com.example.application.billsplitingapp.peopleList
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.application.billsplitingapp.R
-import com.example.application.billsplitingapp.allBills.AllBillsActivity
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.Formatter
 import com.example.application.billsplitingapp.utils.InputDialog
-import org.jetbrains.anko.find
 
 class PersonListFragment : Fragment() {
 
@@ -65,7 +60,7 @@ class PersonListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         prefs = PreferenceManager.getDefaultSharedPreferences(activity!!)
-        view.findViewById<TextView>(R.id.people_total_value).text = Formatter.currencyFormat(prefs.getFloat(
+        view.findViewById<TextView>(R.id.people_total_value).text = Formatter.currencyFormatFromFloat(prefs.getFloat(
             Constants.TOTAL, 0f))
         recyclerView = view.findViewById(R.id.people_recycler)
         recyclerView.layoutManager = LinearLayoutManager(activity)

@@ -12,6 +12,7 @@ import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
 import com.example.application.billsplitingapp.domain.use_case.bill.UpdateBillValue
 import com.example.application.billsplitingapp.utils.Constants
+import com.example.application.billsplitingapp.utils.Formatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -38,7 +39,7 @@ class AddEditProductViewModel @Inject constructor(
     val amount: State<Int> = _amount
 
     val fullValue: Float
-        get() = getFloatValue(_value.value.text) * _amount.value
+        get() = Formatter.currencyFormatFromString(_value.value.text) * _amount.value
 
     var billId: Int = -1
 
@@ -54,7 +55,7 @@ class AddEditProductViewModel @Inject constructor(
                 Product(
                     billId = billId,
                     name = _name.value,
-                    value = getFloatValue(_value.value.text),
+                    value = Formatter.currencyFormatFromString(_value.value.text),
                     amount = _amount.value,
                     people = emptyList()
                 )
@@ -95,19 +96,6 @@ class AddEditProductViewModel @Inject constructor(
             AddEditProductEvents.SaveProduct -> {
                 insertProduct()
             }
-        }
-    }
-
-    private fun getFloatValue(value: String): Float {
-        var p = value.trim()
-        return if (p.isNotEmpty()) {
-            p = p.removeRange(0, 2)
-            p = p.replace(",", "")
-            p = p.replace(".", "")
-            p = p.substring(0, p.length - 2) + "." + p.substring(p.length - 2, p.length)
-            p.toFloat()
-        } else {
-            0f
         }
     }
 

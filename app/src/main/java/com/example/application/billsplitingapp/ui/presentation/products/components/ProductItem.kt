@@ -151,7 +151,7 @@ fun ProductItem(
                         .wrapContentWidth(Alignment.End)
                 ) {
                     Text(
-                        text = Formatter.currencyFormat(product.value * product.amount),
+                        text = Formatter.currencyFormatFromFloat(product.value * product.amount),
                         style = MaterialTheme.typography.body1,
                         fontWeight = FontWeight.Bold,
                         color = MoneyGreen
@@ -189,13 +189,13 @@ fun ProductItem(
                         )
                         Column {
                             Text(
-                                text = Formatter.currencyFormat(fullValue),
+                                text = Formatter.currencyFormatFromFloat(fullValue),
                                 style = MaterialTheme.typography.h6,
                                 fontWeight = FontWeight.Bold,
                                 color = MoneyGreen
                             )
                             Text(
-                                text = Formatter.currencyFormat(product.value) + " cada",
+                                text = Formatter.currencyFormatFromFloat(product.value) + " cada",
                                 style = MaterialTheme.typography.caption,
                                 color = MoneyGreen
                             )
