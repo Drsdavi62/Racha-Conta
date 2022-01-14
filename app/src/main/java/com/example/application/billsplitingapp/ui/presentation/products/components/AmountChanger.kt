@@ -49,15 +49,18 @@ fun AmountChanger(
         IconButton(
             onClick = { onMinusClick(amount - 1) },
             modifier = Modifier.wrapContentSize(),
-            enabled = amount > 1
+            enabled = amount > 1,
+
         ) {
-            Icon(
-                imageVector = Icons.Default.Remove,
-                contentDescription = "Minus",
-                modifier = Modifier
-                    .size(25.dp),
-                tint = MaterialTheme.colors.primaryVariant
-            )
+            if (amount > 1) {
+                Icon(
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "Minus",
+                    modifier = Modifier
+                        .size(25.dp),
+                    tint = MaterialTheme.colors.primaryVariant
+                )
+            }
         }
     }
 }

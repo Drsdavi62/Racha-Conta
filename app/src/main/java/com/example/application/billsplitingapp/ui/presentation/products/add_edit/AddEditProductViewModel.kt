@@ -1,5 +1,9 @@
 package com.example.application.billsplitingapp.ui.presentation.products.add_edit
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,8 +25,20 @@ class AddEditProductViewModel @Inject constructor(
     private val updateBillValue: UpdateBillValue
 ) : ViewModel() {
 
-    private val _eventFlow = MutableSharedFlow<String>()
+    private val _eventFlow = MutableSharedFlow<UIEvents>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _name = mutableStateOf<String>("")
+    val name: State<String> = _name
+
+    private val _value = mutableStateOf<TextFieldValue>(TextFieldValue("R$0,00", TextRange(6)))
+    val value: State<TextFieldValue> = _value
+
+    private val _amount = mutableStateOf<Int>(1)
+    val amount: State<Int> = _amount
+
+    val fullValue: Float
+        get() = getFloatValue(_value.value.text) * _amount.value
 
     var billId: Int = -1
 
@@ -32,20 +48,71 @@ class AddEditProductViewModel @Inject constructor(
         }
     }
 
-    fun insertProduct(name: String, amount: Int, value: Float, people: List<Person>) {
+    fun insertProduct() {
         viewModelScope.launch {
             insertProductUseCase(
                 Product(
                     billId = billId,
-                    name = name,
-                    value = value,
-                    amount = amount,
-                    people = people
+                    name = _name.value,
+                    value = getFloatValue(_value.value.text),
+                    amount = _amount.value,
+                    people = emptyList()
                 )
             )
-            updateBillValue(billId, value * amount)
-            _eventFlow.emit("foi")
+            updateBillValue(billId, fullValue)
+            _eventFlow.emit(UIEvents.SuccessSavingProduct)
         }
     }
 
+    fun onEvent(event: AddEditProductEvents) {
+        when (event) {
+            is AddEditProductEvents.EnteredName -> {
+                _name.value = event.name
+            }
+            is AddEditProductEvents.EnteredValue -> {
+                var previous = value.value.text
+                var future = event.value
+
+                future = future.replace(",", "")
+                if (event.value.length > previous.length) {
+                    if (future[2] == '0') {
+                        future = future.removeRange(2, 3)
+                    }
+                } else if (event.value.length < previous.length) {
+                    if (previous.length <= 6) {
+                        future = future.substring(0, 2) + "0" + future.substring(2, future.length)
+                    }
+                }
+                future = future.substring(0, future.length - 2) + "," + future.subSequence(
+                    future.length - 2,
+                    future.length
+                )
+                _value.value = TextFieldValue(future, TextRange(future.length))
+            }
+            is AddEditProductEvents.ChangedAmount -> {
+                _amount.value = event.amount
+            }
+            AddEditProductEvents.SaveProduct -> {
+                insertProduct()
+            }
+        }
+    }
+
+    private fun getFloatValue(value: String): Float {
+        var p = value.trim()
+        return if (p.isNotEmpty()) {
+            p = p.removeRange(0, 2)
+            p = p.replace(",", "")
+            p = p.replace(".", "")
+            p = p.substring(0, p.length - 2) + "." + p.substring(p.length - 2, p.length)
+            p.toFloat()
+        } else {
+            0f
+        }
+    }
+
+    sealed class UIEvents {
+        object SuccessSavingProduct: UIEvents()
+        object ErrorSavingProduct: UIEvents()
+    }
 }
