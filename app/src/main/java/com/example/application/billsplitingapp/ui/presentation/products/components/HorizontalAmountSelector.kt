@@ -11,8 +11,10 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.application.billsplitingapp.ui.theme.DisabledGray
 
 @Composable
 fun HorizontalAmountSelector(
@@ -29,14 +31,14 @@ fun HorizontalAmountSelector(
         IconButton(
             onClick = { onAmountChange(amount - 1) },
             modifier = Modifier.wrapContentSize(),
-            enabled = amount > 1
+            enabled = amount > 1,
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
                 contentDescription = "Minus",
                 modifier = Modifier
                     .size(40.dp),
-                tint = MaterialTheme.colors.secondary
+                tint = if (amount > 1) MaterialTheme.colors.secondary else DisabledGray
             )
         }
         Text(

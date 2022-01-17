@@ -22,7 +22,9 @@ object AppModule {
             app,
             BillDatabase::class.java,
             BillDatabase.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

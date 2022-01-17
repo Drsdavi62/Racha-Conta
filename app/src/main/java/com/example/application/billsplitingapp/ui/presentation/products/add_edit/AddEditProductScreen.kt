@@ -12,12 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.application.billsplitingapp.ui.presentation.products.components.HorizontalAmountSelector
 import com.example.application.billsplitingapp.ui.presentation.products.components.TotalValueAnimated
+import com.example.application.billsplitingapp.ui.theme.DisabledGray
 import com.example.application.billsplitingapp.utils.Formatter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -67,7 +69,8 @@ fun AddEditProductScreen(
             onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredName(it)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -83,12 +86,9 @@ fun AddEditProductScreen(
                     colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
                     shape = RoundedCornerShape(10.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.AttachMoney, contentDescription = "Price")
-                    }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                TotalValueAnimated(value = Formatter.currencyFormatFromFloat(viewModel.fullValue), triggered = isTotalBig.value)
+                TotalValueAnimated(value = viewModel.fullValue, triggered = isTotalBig.value)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -121,6 +121,7 @@ fun AddEditProductScreen(
             OutlinedButton(
                 onClick = { navController.navigateUp() },
                 border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.background),
                 modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth(.5f)
@@ -137,10 +138,11 @@ fun AddEditProductScreen(
 
             Button(
                 onClick = { viewModel.onEvent(AddEditProductEvents.SaveProduct) },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary, disabledBackgroundColor = DisabledGray),
                 modifier = Modifier
                     .height(50.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                enabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f
             ) {
                 Text(
                     text = "Adicionar",

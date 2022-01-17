@@ -9,7 +9,7 @@ import com.example.application.billsplitingapp.data.cache.model.PersonEntity
 import com.example.application.billsplitingapp.data.cache.model.ProductEntity
 import com.google.gson.Gson
 
-@Database(entities = [BillEntity::class, PersonEntity::class, ProductEntity::class], version = 1)
+@Database(entities = [BillEntity::class, PersonEntity::class, ProductEntity::class], version = 2)
 @TypeConverters(BillTypeConverters::class)
 abstract class BillDatabase: RoomDatabase() {
 

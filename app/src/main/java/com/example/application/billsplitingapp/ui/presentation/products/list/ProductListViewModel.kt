@@ -28,17 +28,9 @@ class ProductListViewModel @Inject constructor(
     private val _products = mutableStateOf<List<Product>>(emptyList())
     val products: State<List<Product>> = _products
 
-    private val _billId = mutableStateOf<Int>(-1)
-    val billId: State<Int> = _billId
-
     var job: Job? = null
 
-    init {
-        savedStateHandle.get<Int>(Constants.BILL_ID)?.let {
-            _billId.value = it
-            loadProducts(it)
-        }
-    }
+    private var billId: Int = -1
 
     fun onEvent(event: ProductListEvents) {
         when (event) {
@@ -51,7 +43,7 @@ class ProductListViewModel @Inject constructor(
             is ProductListEvents.ChangeAmount -> {
                 viewModelScope.launch {
                     updateProductAmount(event.id, event.amount)
-                    updateBillValue(billId.value,
+                    updateBillValue(billId,
                         products.value.map { if (it.id != event.id) it.fullValue else it.value * event.amount }
                             .sum()
                     )
@@ -61,9 +53,14 @@ class ProductListViewModel @Inject constructor(
     }
 
     private fun loadProducts(billId: Int) {
+        println("AQUI")
+        this.billId = billId
         job?.cancel()
         job = getProducts(billId).onEach { products ->
             _products.value = products
+            updateBillValue(billId,
+                products.map { it.fullValue }.sum()
+            )
         }.launchIn(viewModelScope)
     }
 }

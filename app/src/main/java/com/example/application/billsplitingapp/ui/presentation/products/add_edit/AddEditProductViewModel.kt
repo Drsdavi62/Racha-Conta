@@ -23,7 +23,6 @@ import javax.inject.Inject
 class AddEditProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val insertProductUseCase: InsertProduct,
-    private val updateBillValue: UpdateBillValue
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UIEvents>()
@@ -60,7 +59,6 @@ class AddEditProductViewModel @Inject constructor(
                     people = emptyList()
                 )
             )
-            updateBillValue(billId, fullValue)
             _eventFlow.emit(UIEvents.SuccessSavingProduct)
         }
     }
