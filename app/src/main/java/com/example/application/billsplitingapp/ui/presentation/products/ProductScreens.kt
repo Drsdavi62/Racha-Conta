@@ -15,6 +15,11 @@ sealed class ProductScreens(
             navArgument(name = "billId") {
                 type = NavType.IntType
                 defaultValue = -1
-            })
+            },
+            navArgument(name = "productId") {
+                type = NavType.IntType
+                defaultValue = -1
+            }
+        )
     )
 }

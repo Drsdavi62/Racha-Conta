@@ -11,6 +11,8 @@ import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
 import com.example.application.billsplitingapp.domain.use_case.bill.UpdateBillValue
+import com.example.application.billsplitingapp.domain.use_case.product.ChangeValueTextField
+import com.example.application.billsplitingapp.domain.use_case.product.GetProduct
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.Formatter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +25,8 @@ import javax.inject.Inject
 class AddEditProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val insertProductUseCase: InsertProduct,
+    private val getProduct: GetProduct,
+    private val changeValueTextField: ChangeValueTextField
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UIEvents>()
@@ -37,6 +41,11 @@ class AddEditProductViewModel @Inject constructor(
     private val _amount = mutableStateOf<Int>(1)
     val amount: State<Int> = _amount
 
+    private val _isEditing = mutableStateOf<Boolean>(false)
+    val isEditing: State<Boolean> = _isEditing
+
+    private var currentProductId: Int? = null
+
     val fullValue: Float
         get() = Formatter.currencyFormatFromString(_value.value.text) * _amount.value
 
@@ -46,12 +55,27 @@ class AddEditProductViewModel @Inject constructor(
         savedStateHandle.get<Int>(Constants.BILL_ID)?.let { billId ->
             this.billId = billId
         }
+        savedStateHandle.get<Int>("productId")?.let { productId ->
+            if (productId != -1) {
+                viewModelScope.launch {
+                    getProduct(productId)?.also { product ->
+                        currentProductId = productId
+                        _name.value = product.name
+                        val valueFormatted = Formatter.currencyFormatFromFloat(product.value)
+                        _value.value = TextFieldValue(valueFormatted, TextRange(valueFormatted.length))
+                        _amount.value = product.amount
+                        _isEditing.value = true
+                    }
+                }
+            }
+        }
     }
 
     fun insertProduct() {
         viewModelScope.launch {
             insertProductUseCase(
                 Product(
+                    id = currentProductId ?: 0,
                     billId = billId,
                     name = _name.value,
                     value = Formatter.currencyFormatFromString(_value.value.text),
@@ -69,24 +93,8 @@ class AddEditProductViewModel @Inject constructor(
                 _name.value = event.name
             }
             is AddEditProductEvents.EnteredValue -> {
-                var previous = value.value.text
-                var future = event.value
-
-                future = future.replace(",", "")
-                if (event.value.length > previous.length) {
-                    if (future[2] == '0') {
-                        future = future.removeRange(2, 3)
-                    }
-                } else if (event.value.length < previous.length) {
-                    if (previous.length <= 6) {
-                        future = future.substring(0, 2) + "0" + future.substring(2, future.length)
-                    }
-                }
-                future = future.substring(0, future.length - 2) + "," + future.subSequence(
-                    future.length - 2,
-                    future.length
-                )
-                _value.value = TextFieldValue(future, TextRange(future.length))
+                val finalValue = changeValueTextField(value.value.text, event.value)
+                _value.value = TextFieldValue(finalValue, TextRange(finalValue.length))
             }
             is AddEditProductEvents.ChangedAmount -> {
                 _amount.value = event.amount

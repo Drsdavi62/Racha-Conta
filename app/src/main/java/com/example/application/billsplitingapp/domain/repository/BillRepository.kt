@@ -22,4 +22,8 @@ interface BillRepository {
     suspend fun updateBillValue(billId: Int, value: Float)
 
     suspend fun updateProductAmount(productId: Int, amount: Int)
+
+    suspend fun getProductById(id: Int): Product?
+
+    suspend fun deleteProduct(product: Product)
 }

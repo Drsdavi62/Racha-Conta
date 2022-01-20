@@ -1,7 +1,11 @@
 package com.example.application.billsplitingapp.utils
 
 object Formatter {
-    fun currencyFormatFromFloat(value: Float) = "R$ " + String.format("%.2f", value)
+    fun currencyFormatFromFloat(value: Float): String  {
+        var s = "R$" + String.format("%.2f", value)
+        s = s.replace(".", ",")
+        return s
+    }
 
     fun currencyFormatFromString(value: String): Float {
         var p = value.trim()

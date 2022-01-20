@@ -60,4 +60,16 @@ class BillRepositoryImpl @Inject constructor(
     override suspend fun updateProductAmount(productId: Int, amount: Int) {
         productDao.updateAmount(productId, amount)
     }
+
+    override suspend fun getProductById(id: Int): Product? {
+        return try {
+            productDao.getProductById(id)?.toProduct()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun deleteProduct(product: Product) {
+        productDao.deleteProduct(product.toProductEntity())
+    }
 }

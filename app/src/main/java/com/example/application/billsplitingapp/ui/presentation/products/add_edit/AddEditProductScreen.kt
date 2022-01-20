@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Money
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +34,8 @@ fun AddEditProductScreen(
 
     val value = viewModel.value.value
 
+    val isEditing = viewModel.isEditing.value
+
     val isTotalBig = remember {
         mutableStateOf(false)
     }
@@ -55,67 +54,68 @@ fun AddEditProductScreen(
             }
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
+        Column() {
 
-        Text(text = "Produto", style = MaterialTheme.typography.h6)
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = name,
-            onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredName(it)) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
-            shape = RoundedCornerShape(10.dp),
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.fillMaxWidth(.48f)) {
-                Text(text = "Valor Unitário", style = MaterialTheme.typography.h6)
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = value,
-                    onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredValue(it.text)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
-                    shape = RoundedCornerShape(10.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                TotalValueAnimated(value = viewModel.fullValue, triggered = isTotalBig.value)
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(
+            Text(text = "Produto", style = MaterialTheme.typography.h6)
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = name,
+                onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredName(it)) },
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Quantidade", style = MaterialTheme.typography.h6)
-                Spacer(modifier = Modifier.height(8.dp))
-                HorizontalAmountSelector(
-                    amount = amount,
-                    onAmountChange = {
-                        viewModel.onEvent(AddEditProductEvents.ChangedAmount(it))
-                        composableScope.launch {
-                            isTotalBig.value = true
-                            delay(250)
-                            isTotalBig.value = false
-                        }
-                    })
+                colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
+                shape = RoundedCornerShape(10.dp),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.fillMaxWidth(.48f)) {
+                    Text(text = "Valor Unitário", style = MaterialTheme.typography.h6)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = value,
+                        onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredValue(it.text)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
+                        shape = RoundedCornerShape(10.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    TotalValueAnimated(value = viewModel.fullValue, triggered = isTotalBig.value)
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Quantidade", style = MaterialTheme.typography.h6)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalAmountSelector(
+                        amount = amount,
+                        onAmountChange = {
+                            viewModel.onEvent(AddEditProductEvents.ChangedAmount(it))
+                            composableScope.launch {
+                                isTotalBig.value = true
+                                delay(250)
+                                isTotalBig.value = false
+                            }
+                        })
+                }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(text = "Quem irá dividir esse produto?", style = MaterialTheme.typography.h6)
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(text = "Quem irá dividir esse produto?", style = MaterialTheme.typography.h6)
-
 
         Row(modifier = Modifier.fillMaxWidth()) {
             OutlinedButton(
@@ -138,14 +138,17 @@ fun AddEditProductScreen(
 
             Button(
                 onClick = { viewModel.onEvent(AddEditProductEvents.SaveProduct) },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary, disabledBackgroundColor = DisabledGray),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    disabledBackgroundColor = DisabledGray
+                ),
                 modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth(),
                 enabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f
             ) {
                 Text(
-                    text = "Adicionar",
+                    text = if (isEditing) "Salvar" else "Adicionar",
                     color = MaterialTheme.colors.onSecondary,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.h6
@@ -153,4 +156,6 @@ fun AddEditProductScreen(
             }
         }
     }
+
+
 }

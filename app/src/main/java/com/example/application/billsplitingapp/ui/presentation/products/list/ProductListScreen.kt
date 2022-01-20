@@ -18,13 +18,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.application.billsplitingapp.ui.Screen
+import com.example.application.billsplitingapp.ui.components.HistoryCardItem
+import com.example.application.billsplitingapp.ui.components.SwipeToDeleteBackground
 import com.example.application.billsplitingapp.ui.presentation.bill.BottomNavigationBar
+import com.example.application.billsplitingapp.ui.presentation.products.ProductScreens
 import com.example.application.billsplitingapp.ui.presentation.products.components.ProductItem
 import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListEvents
 import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductListScreen(
+    navController: NavController,
     viewModel: ProductListViewModel = hiltViewModel(),
     billId: Int
 ) {
@@ -43,21 +49,43 @@ fun ProductListScreen(
                 .fillMaxSize()
         ) {
             itemsIndexed(products) { i, product ->
-                ProductItem(
-                    product = product,
-                    isFirst = i == 0,
-                    isLast = i == products.size - 1,
-                    onPlusAmountClick = { productId, amount ->
-                        viewModel.onEvent(ProductListEvents.ChangeAmount(productId, amount))
-                    },
-                    onMinusAmountClick = { productId, amount ->
-                        viewModel.onEvent(ProductListEvents.ChangeAmount(productId, amount))
-                    },
-                    onEditClick = {
-
-                    },
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        if (it == DismissValue.DismissedToStart) {
+                            viewModel.onEvent(ProductListEvents.DeleteProduct(product))
+                        }
+                        it != DismissValue.DismissedToStart
+                    }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(
+                        DismissDirection.EndToStart
+                    ),
+                    dismissThresholds = { direction ->
+                        FractionalThreshold(if (direction == DismissDirection.StartToEnd) 0.25f else 0.5f)
+                    },
+                    background = {
+                        SwipeToDeleteBackground(dismissState = dismissState)
+                    },
+                    dismissContent = {
+                        ProductItem(
+                            product = product,
+                            isFirst = i == 0,
+                            isLast = i == products.size - 1,
+                            onPlusAmountClick = { productId, amount ->
+                                viewModel.onEvent(ProductListEvents.ChangeAmount(productId, amount))
+                            },
+                            onMinusAmountClick = { productId, amount ->
+                                viewModel.onEvent(ProductListEvents.ChangeAmount(productId, amount))
+                            },
+                            onEditClick = {
+                                navController.navigate(ProductScreens.AddEditProductScreen.route + "/?billId=${billId}&productId=${product.id}")
+                            },
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                )
             }
 
         }

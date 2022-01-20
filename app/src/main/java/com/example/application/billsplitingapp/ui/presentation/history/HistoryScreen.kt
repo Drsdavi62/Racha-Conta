@@ -60,6 +60,7 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                             }
                         },
                         onDeleteClick = {
+                            selectionMode.value = false
                             viewModel.deleteBills(selectedBillList)
                         }
                     )
@@ -110,18 +111,18 @@ fun HistoryScreen(navController: NavController, viewModel: HistoryViewModel = hi
                                         navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
                                     },
                                     onLongPress = { selected, bill ->
-                                        navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
-//                                        if (!selectionMode.value) {
-//                                            selectionMode.value = true
-//                                        }
-//                                        if (selected) {
-//                                            selectedBillList.add(bill)
-//                                        } else {
-//                                            selectedBillList.remove(bill)
-//                                        }
-//                                        if (selectedBillList.isEmpty()) {
-//                                            selectionMode.value = false
-//                                        }
+//                                        navController.navigate(Screen.Bill.route + "/?billId=${bill.id}")
+                                        if (!selectionMode.value) {
+                                            selectionMode.value = true
+                                        }
+                                        if (selected) {
+                                            selectedBillList.add(bill)
+                                        } else {
+                                            selectedBillList.remove(bill)
+                                        }
+                                        if (selectedBillList.isEmpty()) {
+                                            selectionMode.value = false
+                                        }
                                     }
                                 )
                             }

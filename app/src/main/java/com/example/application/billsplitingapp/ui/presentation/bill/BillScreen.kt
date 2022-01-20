@@ -95,10 +95,10 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
                 composable(
                     route = BottomNavigationScreen.Products.route,
                 ) {
-                    ProductListScreen(billId = bill?.id ?: -1)
+                    ProductListScreen(navController = navController, billId = bill?.id ?: -1)
                 }
                 composable(
-                    route = ProductScreens.AddEditProductScreen.route + "/?billId={billId}",
+                    route = ProductScreens.AddEditProductScreen.route + "/?billId={billId}&productId={productId}",
                     arguments = ProductScreens.AddEditProductScreen.arguments
                 ) {
                     AddEditProductScreen(navController = navController)

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.use_case.bill.UpdateBillValue
+import com.example.application.billsplitingapp.domain.use_case.product.DeleteProduct
 import com.example.application.billsplitingapp.domain.use_case.product.GetProducts
 import com.example.application.billsplitingapp.domain.use_case.product.UpdateProductAmount
 import com.example.application.billsplitingapp.utils.Constants
@@ -22,7 +23,8 @@ class ProductListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getProducts: GetProducts,
     private val updateProductAmount: UpdateProductAmount,
-    private val updateBillValue: UpdateBillValue
+    private val updateBillValue: UpdateBillValue,
+    private val deleteProduct: DeleteProduct
 ) : ViewModel() {
 
     private val _products = mutableStateOf<List<Product>>(emptyList())
@@ -38,7 +40,9 @@ class ProductListViewModel @Inject constructor(
                 loadProducts(event.billId)
             }
             is ProductListEvents.DeleteProduct -> {
-
+                viewModelScope.launch {
+                    deleteProduct(event.product)
+                }
             }
             is ProductListEvents.ChangeAmount -> {
                 viewModelScope.launch {
@@ -53,11 +57,10 @@ class ProductListViewModel @Inject constructor(
     }
 
     private fun loadProducts(billId: Int) {
-        println("AQUI")
         this.billId = billId
         job?.cancel()
         job = getProducts(billId).onEach { products ->
-            _products.value = products
+            _products.value = products.reversed()
             updateBillValue(billId,
                 products.map { it.fullValue }.sum()
             )
