@@ -104,7 +104,7 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
                     AddEditProductScreen(navController = navController)
                 }
                 composable(BottomNavigationScreen.People.route) {
-                    PeopleScreen()
+                    PeopleScreen(billId = bill?.id ?: -1)
                 }
             }
         }

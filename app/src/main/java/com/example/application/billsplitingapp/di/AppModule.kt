@@ -30,6 +30,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBillRepository(db: BillDatabase): BillRepository {
-        return BillRepositoryImpl(billDao = db.billDao, productDao = db.productDao, personDao = db.personDao)
+        return BillRepositoryImpl(
+            billDao = db.billDao,
+            productDao = db.productDao,
+            personDao = db.personDao,
+            productWithPeopleDao = db.productWithPeopleDao
+        )
     }
 }

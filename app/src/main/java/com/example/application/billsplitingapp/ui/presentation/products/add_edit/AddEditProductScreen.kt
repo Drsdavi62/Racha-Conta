@@ -1,16 +1,28 @@
 package com.example.application.billsplitingapp.ui.presentation.products.add_edit
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -40,7 +52,13 @@ fun AddEditProductScreen(
         mutableStateOf(false)
     }
 
+    val people = viewModel.people.value
+
+    var selectedPeople = viewModel.selectedPeople
+
     val composableScope = rememberCoroutineScope()
+
+    val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -60,7 +78,7 @@ fun AddEditProductScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column() {
+        Column(Modifier.fillMaxHeight(.9f)) {
 
             Text(text = "Produto", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
@@ -114,16 +132,50 @@ fun AddEditProductScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            Column(Modifier.fillMaxWidth()) {
+
+            }
+
             Text(text = "Quem irá dividir esse produto?", style = MaterialTheme.typography.h6)
+
+            BoxWithConstraints() {
+                LazyColumn(state = listState, modifier = Modifier.simpleVerticalScrollbar(listState, listTotalHeight = maxHeight)) {
+                    items(people) { person ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = selectedPeople.contains(person),
+                                onCheckedChange = {
+                                    viewModel.onEvent(AddEditProductEvents.ToggledPersonSelection(person))
+                                },
+                                colors = CheckboxDefaults.colors()
+                            )
+                            Text(
+                                text = person.name,
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
 
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()) {
             OutlinedButton(
                 onClick = { navController.navigateUp() },
                 border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                 colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.background),
                 modifier = Modifier
-                    .height(50.dp)
+                    .fillMaxHeight()
                     .fillMaxWidth(.5f)
             ) {
                 Text(
@@ -143,7 +195,7 @@ fun AddEditProductScreen(
                     disabledBackgroundColor = DisabledGray
                 ),
                 modifier = Modifier
-                    .height(50.dp)
+                    .fillMaxHeight()
                     .fillMaxWidth(),
                 enabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f
             ) {
@@ -158,4 +210,60 @@ fun AddEditProductScreen(
     }
 
 
+}
+
+@Composable
+fun Modifier.simpleVerticalScrollbar(
+    state: LazyListState,
+    width: Dp = 4.dp,
+    color: Color = MaterialTheme.colors.primary,
+    listTotalHeight: Dp
+): Modifier {
+
+    var lol: Int = 0
+    if (state.layoutInfo.visibleItemsInfo.isNotEmpty()) {
+        lol = remember {
+            state.layoutInfo.visibleItemsInfo.size
+        }
+    }
+
+    val targetAlpha = if (state.isScrollInProgress) 1f else 0f
+    val duration = if (state.isScrollInProgress) 150 else 500
+
+    val alpha by animateFloatAsState(
+        targetValue = targetAlpha,
+        animationSpec = tween(durationMillis = duration)
+    )
+
+    val elementHeight = listTotalHeight / state.layoutInfo.totalItemsCount
+    val firstVisibleElementIndex = state.layoutInfo.visibleItemsInfo.firstOrNull()?.index
+
+    var heightInPx: Float
+
+    with(LocalDensity.current) {
+        heightInPx = elementHeight.toPx()
+    }
+    val scrollbarOffsetY = firstVisibleElementIndex?.times(heightInPx) ?: 0f
+
+    val offset by animateFloatAsState(
+        targetValue = scrollbarOffsetY,
+        animationSpec = tween(duration)
+    )
+    val scrollbarHeight = lol * heightInPx
+
+    return drawWithContent {
+        drawContent()
+        val needDrawScrollbar = state.isScrollInProgress || alpha > 0.0f
+
+        // Draw scrollbar if scrolling or if the animation is still running and lazy column has content
+        if (needDrawScrollbar && firstVisibleElementIndex != null) {
+
+            drawRect(
+                color = color,
+                topLeft = Offset(this.size.width - width.toPx(), offset),
+                size = Size(width.toPx(), scrollbarHeight),
+                alpha = alpha
+            )
+        }
+    }
 }

@@ -83,12 +83,15 @@ fun HistoryCardItem(
                 IconText(
                     icon = Icons.Filled.People,
                     text = bill.people.map { it.name }.joinToString(", "),
-                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant,
+                    modifier = Modifier.fillMaxWidth(.60f)
                 )
                 IconText(
                     icon = Icons.Filled.DateRange,
                     text = bill.date,
-                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 )
             }
         }

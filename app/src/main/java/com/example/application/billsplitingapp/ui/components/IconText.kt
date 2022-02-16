@@ -1,5 +1,6 @@
 package com.example.application.billsplitingapp.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -19,9 +20,11 @@ fun IconText(
     iconTint: Color = MaterialTheme.colors.primaryVariant,
     textStyle: TextStyle = MaterialTheme.typography.body1,
     textColor: Color = Color.Unspecified,
-    fontWeight: FontWeight? = null
+    fontWeight: FontWeight? = null,
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier, horizontalArrangement = horizontalArrangement) {
         Icon(
             imageVector = icon, contentDescription = "icon", Modifier.padding(end = 4.dp),
             tint = iconTint
