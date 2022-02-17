@@ -24,9 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
 import com.example.application.billsplitingapp.ui.presentation.bill.people.PeopleScreen
-import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListScreen
 import com.example.application.billsplitingapp.ui.presentation.products.ProductScreens
 import com.example.application.billsplitingapp.ui.presentation.products.add_edit.AddEditProductScreen
+import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListScreen
 
 @Composable
 fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hiltViewModel()) {
@@ -55,7 +55,8 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
         },
         floatingActionButton = {
             if (navBackStackEntry?.destination?.route == BottomNavigationScreen.Products.route
-                || navBackStackEntry?.destination?.route == BottomNavigationScreen.People.route) {
+                || navBackStackEntry?.destination?.route == BottomNavigationScreen.People.route
+            ) {
                 FloatingActionButton(onClick = {
                     navController.navigate(
                         if (navBackStackEntry?.destination?.route == BottomNavigationScreen.Products.route) {
@@ -88,7 +89,13 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
         Column(modifier = Modifier.padding(innerPadding)) {
             BackTitleHeader(
                 title = bill?.name ?: "Comanda",
-                navController = mainNavController,
+                navController = if (navBackStackEntry?.destination?.route == BottomNavigationScreen.Products.route
+                    || navBackStackEntry?.destination?.route == BottomNavigationScreen.People.route
+                ) {
+                    mainNavController
+                } else {
+                    navController
+                },
                 modifier = Modifier.padding(top = 16.dp)
             )
             NavHost(navController, startDestination = BottomNavigationScreen.Products.route) {
