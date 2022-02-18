@@ -11,6 +11,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.RemoveDone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.application.billsplitingapp.ui.presentation.products.components.CheckboxItem
 import com.example.application.billsplitingapp.ui.presentation.products.components.HorizontalAmountSelector
 import com.example.application.billsplitingapp.ui.presentation.products.components.TotalValueAnimated
 import com.example.application.billsplitingapp.ui.theme.DisabledGray
@@ -136,29 +140,39 @@ fun AddEditProductScreen(
 
             }
 
-            Text(text = "Quem irá dividir esse produto?", style = MaterialTheme.typography.h6)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    text = "Quem irá dividir esse produto?",
+                    style = MaterialTheme.typography.h6,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(AddEditProductEvents.ToggleAllPeople)
+                    }
+                ) {
+                    Icon(
+                        imageVector = if (selectedPeople.size == people.size) Icons.Default.RemoveDone else Icons.Default.DoneAll,
+                        contentDescription = "Select all",
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+            }
 
             BoxWithConstraints() {
-                LazyColumn(state = listState, modifier = Modifier.simpleVerticalScrollbar(listState, listTotalHeight = maxHeight)) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.simpleVerticalScrollbar(
+                        listState,
+                        listTotalHeight = maxHeight
+                    )
+                ) {
                     items(people) { person ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        CheckboxItem(
+                            checked = selectedPeople.contains(person),
+                            text = person.name
                         ) {
-                            Checkbox(
-                                checked = selectedPeople.contains(person),
-                                onCheckedChange = {
-                                    viewModel.onEvent(AddEditProductEvents.ToggledPersonSelection(person))
-                                },
-                                colors = CheckboxDefaults.colors()
-                            )
-                            Text(
-                                text = person.name,
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp)
-                            )
+                            viewModel.onEvent(AddEditProductEvents.ToggledPersonSelection(person))
                         }
                     }
                 }
@@ -167,9 +181,11 @@ fun AddEditProductScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             OutlinedButton(
                 onClick = { navController.navigateUp() },
                 border = BorderStroke(1.dp, MaterialTheme.colors.secondary),

@@ -16,6 +16,7 @@ import com.example.application.billsplitingapp.domain.use_case.product.GetProduc
 import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.Formatter
+import com.example.application.billsplitingapp.utils.addAllDistinct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -113,12 +114,13 @@ class AddEditProductViewModel @Inject constructor(
                 insertProduct()
             }
             is AddEditProductEvents.ToggledPersonSelection -> {
-                print(selectedPeople)
-                print(event.person)
-                if (selectedPeople.contains(event.person)) {
-                    selectedPeople.remove(event.person)
+                selectedPeople.toggle(event.person)
+            }
+            AddEditProductEvents.ToggleAllPeople -> {
+                if (selectedPeople.size == people.value.size) {
+                    selectedPeople.clear()
                 } else {
-                    selectedPeople.add(event.person)
+                    selectedPeople.addAllDistinct(people.value)
                 }
             }
         }
@@ -127,5 +129,13 @@ class AddEditProductViewModel @Inject constructor(
     sealed class UIEvents {
         object SuccessSavingProduct : UIEvents()
         object ErrorSavingProduct : UIEvents()
+    }
+}
+
+fun <T> MutableList<T>.toggle(item: T) {
+    if (contains(item)) {
+        remove(item)
+    } else {
+        add(item)
     }
 }

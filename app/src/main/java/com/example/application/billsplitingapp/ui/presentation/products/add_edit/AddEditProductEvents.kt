@@ -7,5 +7,6 @@ sealed class AddEditProductEvents {
     data class EnteredValue(val value: String): AddEditProductEvents()
     data class ChangedAmount(val amount: Int): AddEditProductEvents()
     data class ToggledPersonSelection(val person: Person): AddEditProductEvents()
+    object ToggleAllPeople: AddEditProductEvents()
     object SaveProduct: AddEditProductEvents()
 }
