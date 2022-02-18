@@ -14,7 +14,7 @@ interface PersonDao {
     suspend fun getStaticPeopleFromBill(billId: Int): List<PersonEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPerson(personEntity: PersonEntity)
+    suspend fun insertPerson(personEntity: PersonEntity): Long
 
     @Delete
     suspend fun deletePerson(personEntity: PersonEntity)

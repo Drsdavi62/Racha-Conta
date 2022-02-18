@@ -23,7 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
-import com.example.application.billsplitingapp.ui.presentation.bill.people.PeopleScreen
+import com.example.application.billsplitingapp.ui.presentation.people.PeopleScreen
 import com.example.application.billsplitingapp.ui.presentation.products.ProductScreens
 import com.example.application.billsplitingapp.ui.presentation.products.add_edit.AddEditProductScreen
 import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListScreen

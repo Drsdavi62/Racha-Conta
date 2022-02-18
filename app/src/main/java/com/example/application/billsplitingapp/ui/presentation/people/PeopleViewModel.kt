@@ -1,4 +1,4 @@
-package com.example.application.billsplitingapp.ui.presentation.bill.people
+package com.example.application.billsplitingapp.ui.presentation.people
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Person
+import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.domain.repository.BillRepository
+import com.example.application.billsplitingapp.domain.use_case.people.FetchPeopleFromBill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PeopleViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: BillRepository
+    private val repository: BillRepository,
+    private val fetchPeopleFromBill: FetchPeopleFromBill
 ) : ViewModel() {
 
     private val _people = mutableStateOf<List<Person>>(emptyList())
@@ -29,26 +32,47 @@ class PeopleViewModel @Inject constructor(
         viewModelScope.launch {
             repository.insertPerson(Person(
                 billId = billId,
-                name = "Davi"
+                name = "Davi",
+                products = emptyList()
             ))
             repository.insertPerson(Person(
                 billId = billId,
-                name = "Julia"
+                name = "Julia",
+                products = listOf(
+                    Product(
+                        id = 0,
+                        billId = 0,
+                        name = "Hamburguer",
+                        value = 0.0f,
+                        amount = 0,
+                        people = listOf()
+                    ),
+                    Product(
+                        id = 0,
+                        billId = 0,
+                        name = "Hamburguer",
+                        value = 0.0f,
+                        amount = 0,
+                        people = listOf()
+                    ),
+                )
             ))
             repository.insertPerson(Person(
                 billId = billId,
-                name = "Isa"
+                name = "Isa",
+                products = emptyList()
             ))
             repository.insertPerson(Person(
                 billId = billId,
-                name = "Joao"
+                name = "Joao",
+                products = emptyList()
             ))
         }
     }
 
     fun fetchPeople(billId: Int) {
         job?.cancel()
-        job = repository.fetchPeopleFromBill(billId).onEach { people ->
+        job = fetchPeopleFromBill(billId).onEach { people ->
             _people.value = people
         }.launchIn(viewModelScope)
     }

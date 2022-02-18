@@ -33,9 +33,14 @@ interface BillRepository {
 
     suspend fun getFullProductById(id: Int): Product?
 
+
     suspend fun insertPerson(person: Person)
 
     fun fetchPeopleFromBill(billId: Int): Flow<List<Person>>
 
     suspend fun getPeopleFromBillList(billId: Int): List<Person>
+
+    fun getFullPeopleFromBill(billId: Int): Flow<List<Person>>
+
+    suspend fun getFullPersonById(id: Int): Person?
 }
