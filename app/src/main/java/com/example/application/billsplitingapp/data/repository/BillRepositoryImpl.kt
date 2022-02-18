@@ -126,7 +126,12 @@ class BillRepositoryImpl @Inject constructor(
         return productWithPeopleDao.getPeopleFromBill(billId).map { personEntities ->
             personEntities.map { personEntity ->
                 val p = personEntity.toPerson()
-                p.value = p.products.map { it.fullValue / productWithPeopleDao.getRelationAmountForProduct(it.id) }.sum()
+                val products = p.products
+                products.forEach {
+                    it.value = it.fullValue / productWithPeopleDao.getRelationAmountForProduct(it.id)
+                }
+                p.products = products
+                p.value = products.map { it.value }.sum()
                 p
             }
         }
