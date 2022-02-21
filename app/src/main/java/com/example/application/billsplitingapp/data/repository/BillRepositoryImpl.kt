@@ -98,6 +98,11 @@ class BillRepositoryImpl @Inject constructor(
             .map { productEntities -> productEntities.map { it.toProduct() } }
     }
 
+
+    override suspend fun getProductListFromBill(billId: Int): List<Product> {
+        return productDao.getStaticProductsFromBill(billId).map { it.toProduct() }
+    }
+
     override suspend fun getFullProductById(id: Int): Product? {
         return try {
             productWithPeopleDao.getProductById(id)?.toProduct()
@@ -106,8 +111,12 @@ class BillRepositoryImpl @Inject constructor(
         }
     }
 
+
+
+
     override suspend fun insertPerson(person: Person) {
         val personId = personDao.insertPerson(person.toPersonEntity())
+        productWithPeopleDao.deleteRelationsForPerson(personId.toInt())
         person.products.forEach { product ->
             productWithPeopleDao.insertProductWithPeople(
                 ProductWithPeopleEntity(
@@ -143,5 +152,10 @@ class BillRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
+    }
+
+    override suspend fun deletePerson(person: Person) {
+        personDao.deletePerson(person.toPersonEntity())
+//        productWithPeopleDao.deleteRelationsForPerson(person.id)
     }
 }

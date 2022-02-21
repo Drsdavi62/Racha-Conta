@@ -27,7 +27,7 @@ interface ProductWithPeopleDao {
     @Query("DELETE FROM productwithpeopleentity WHERE productId = :productId")
     suspend fun deleteRelationsForProduct(productId: Int)
 
-    @Query("DELETE FROM productwithpeopleentity WHERE productId = :personId")
+    @Query("DELETE FROM productwithpeopleentity WHERE personId = :personId")
     suspend fun deleteRelationsForPerson(personId: Int)
 
     @Query("SELECT COUNT(productId) FROM productwithpeopleentity WHERE productId = :productId")

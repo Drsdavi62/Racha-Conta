@@ -23,7 +23,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.application.billsplitingapp.ui.components.BackTitleHeader
-import com.example.application.billsplitingapp.ui.presentation.people.PeopleScreen
+import com.example.application.billsplitingapp.ui.presentation.people.add_edit.AddEditPersonScreen
+import com.example.application.billsplitingapp.ui.presentation.people.list.PeopleScreen
 import com.example.application.billsplitingapp.ui.presentation.products.ProductScreens
 import com.example.application.billsplitingapp.ui.presentation.products.add_edit.AddEditProductScreen
 import com.example.application.billsplitingapp.ui.presentation.products.list.ProductListScreen
@@ -62,7 +63,7 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
                         if (navBackStackEntry?.destination?.route == BottomNavigationScreen.Products.route) {
                             ProductScreens.AddEditProductScreen.route + "/?billId=${bill?.id}"
                         } else {
-                            ProductScreens.AddEditProductScreen.route + "/?billId=${bill?.id}"
+                            PeopleScreens.AddEditPersonScreen.route + "/?billId=${bill?.id}"
                         }
                     )
                 }) {
@@ -110,8 +111,14 @@ fun BillScreen(mainNavController: NavController, viewModel: BillViewModel = hilt
                 ) {
                     AddEditProductScreen(navController = navController)
                 }
+                composable(
+                    route = PeopleScreens.AddEditPersonScreen.route + "/?billId={billId}&personId={personId}",
+                    arguments = PeopleScreens.AddEditPersonScreen.arguments
+                ) {
+                    AddEditPersonScreen(navController = navController)
+                }
                 composable(BottomNavigationScreen.People.route) {
-                    PeopleScreen(billId = bill?.id ?: -1)
+                    PeopleScreen(billId = bill?.id ?: -1, navController = navController)
                 }
             }
         }

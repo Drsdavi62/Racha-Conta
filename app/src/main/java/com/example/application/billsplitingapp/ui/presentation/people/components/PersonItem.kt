@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Person
+import com.example.application.billsplitingapp.ui.components.IconButtonText
 import com.example.application.billsplitingapp.ui.components.IconText
 import com.example.application.billsplitingapp.ui.theme.MoneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
@@ -25,7 +27,8 @@ import com.example.application.billsplitingapp.utils.Formatter
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PersonItem(
-    person: Person
+    person: Person,
+    onEditClick: () -> Unit
 ) {
 
     val isExpanded = remember { mutableStateOf(false) }
@@ -90,12 +93,12 @@ fun PersonItem(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 16.dp)
+                    .padding(top = 16.dp)
                     .fillMaxWidth()
             ) {
                 person.products.forEach { product ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(start = 10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(text = "• " + product.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -110,14 +113,27 @@ fun PersonItem(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = Formatter.currencyFormatFromFloat(person.value),
-                    style = MaterialTheme.typography.body1,
-                    fontWeight = FontWeight.Bold,
-                    color = MoneyGreen,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButtonText(
+                        onClick = onEditClick,
+                        icon = Icons.Outlined.Edit,
+                        text = "Editar",
+                        textColor = MaterialTheme.colors.primaryVariant,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = Formatter.currencyFormatFromFloat(person.value),
+                        style = MaterialTheme.typography.body1,
+                        fontWeight = FontWeight.Bold,
+                        color = MoneyGreen,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End
+                    )
+                }
             }
 
         }
