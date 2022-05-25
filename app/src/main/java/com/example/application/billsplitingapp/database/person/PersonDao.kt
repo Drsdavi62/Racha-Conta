@@ -24,6 +24,9 @@ interface PersonDao {
     @Query("DELETE FROM PersonModel WHERE billId =:billId")
     suspend fun deleteByBill(billId: Int)
 
+    @Query("DELETE FROM PersonModel WHERE billId in (:billIds)")
+    suspend fun deleteByMultipleBills(billIds: List<Int>)
+
     @Query("UPDATE PersonModel SET name = :name WHERE id = :id")
     suspend fun editPersonName(id: Int, name: String)
 

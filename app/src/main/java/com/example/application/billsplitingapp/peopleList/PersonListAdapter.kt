@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.models.PersonModel
-import com.example.application.billsplitingapp.productList.ProductDiffCallback
 import com.example.application.billsplitingapp.utils.Formatter
 
 class PersonListAdapter(val list: MutableList<PersonModel>) :
@@ -40,7 +39,7 @@ class PersonListAdapter(val list: MutableList<PersonModel>) :
 
     override fun onBindViewHolder(holder: PersonListAdapter.ViewHolder, position: Int) {
         holder.name.text = list[position].name
-        holder.value.text = Formatter.currencyFormat(list[position].value)
+        holder.value.text = Formatter.currencyFormatFromFloat(list[position].value)
         holder.deleteButton.setOnClickListener{
             listener.onDeleteClick(position)
         }

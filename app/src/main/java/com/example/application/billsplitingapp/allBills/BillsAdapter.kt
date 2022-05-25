@@ -10,7 +10,6 @@ import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.models.BillModel
 import com.example.application.billsplitingapp.models.PersonModel
 import com.example.application.billsplitingapp.utils.Formatter
-import kotlinx.coroutines.selects.select
 import java.util.*
 
 class BillsAdapter(val list : List<BillModel>, private val relationList : List<List<PersonModel>>) : RecyclerView.Adapter<BillsAdapter.ViewHolder>() {
@@ -37,7 +36,7 @@ class BillsAdapter(val list : List<BillModel>, private val relationList : List<L
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = list[position].name
         holder.date.text = list[position].date
-        holder.value.text = Formatter.currencyFormat(list[position].value)
+        holder.value.text = Formatter.currencyFormatFromFloat(list[position].value)
         val personList = relationList[position]
         val nameList = personList.map { it.name }
         var str = ""

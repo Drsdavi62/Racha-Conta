@@ -1,7 +1,6 @@
 package com.example.application.billsplitingapp.productList
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,7 @@ class ProductListAdapter (var productList : MutableList<ProductModel>, var relat
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = productList[position].name
-        holder.price.text = Formatter.currencyFormat(productList[position].price)
+        holder.price.text = Formatter.currencyFormatFromFloat(productList[position].price)
         val personList = relationList[position] as MutableList
         personList.sortBy { it.id }
         val names = personList.map { it.name }

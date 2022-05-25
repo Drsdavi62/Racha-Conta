@@ -16,8 +16,8 @@ class BillRepository (private val context: Context) {
 
     fun getList() = billDao.getList()
 
-    suspend fun insertBill(name : String, date : String){
-        billDao.insertBill(BillModel(name, date))
+    suspend fun insertBill(name : String, date : String): Long {
+        return billDao.insertBill(BillModel(name, date))
     }
     suspend fun editBill(id : Int, name : String){
         billDao.editBill(id, name)
@@ -25,6 +25,10 @@ class BillRepository (private val context: Context) {
 
     suspend fun deleteBill(id: Int){
         billDao.deleteBill(id)
+    }
+
+    suspend fun deleteMultipleBills(ids: List<Int>) {
+        billDao.deleteMultipleBills(ids)
     }
 
     suspend fun setBillValue(id : Int, value : Float){
