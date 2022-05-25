@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.ui.components.IconButtonText
 import com.example.application.billsplitingapp.ui.components.IconText
-import com.example.application.billsplitingapp.ui.theme.MoneyGreen
+import com.example.application.billsplitingapp.ui.theme.moneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -70,7 +70,7 @@ fun PersonItem(
                         text = Formatter.currencyFormatFromFloat(person.value),
                         style = MaterialTheme.typography.body1,
                         fontWeight = FontWeight.Bold,
-                        color = MoneyGreen
+                        color = MaterialTheme.colors.moneyGreen
                     )
 
                 }
@@ -105,7 +105,7 @@ fun PersonItem(
                         Text(
                             text = Formatter.currencyFormatFromFloat(product.value),
                             textAlign = TextAlign.End,
-                            color = MoneyGreen
+                            color = MaterialTheme.colors.moneyGreen
                         )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
@@ -129,7 +129,7 @@ fun PersonItem(
                         text = Formatter.currencyFormatFromFloat(person.value),
                         style = MaterialTheme.typography.body1,
                         fontWeight = FontWeight.Bold,
-                        color = MoneyGreen,
+                        color = MaterialTheme.colors.moneyGreen,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End
                     )

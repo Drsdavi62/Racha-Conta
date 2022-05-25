@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Bill
+import com.example.application.billsplitingapp.ui.theme.invisibleCardColor
 import com.example.application.billsplitingapp.utils.Formatter
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -44,7 +45,7 @@ fun HistoryCardItem(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .shadow(
                 elevation = 3.dp,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             )
             .clip(RoundedCornerShape(20.dp))
             .combinedClickable(
@@ -59,7 +60,7 @@ fun HistoryCardItem(
                     longClick(bill)
                 }
             ),
-        color = if (isSelected) MaterialTheme.colors.primaryVariant else Color(0xFFFFFFFF),
+        color = if (isSelected) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.invisibleCardColor,
         elevation = 200.dp
     ) {
         Column(

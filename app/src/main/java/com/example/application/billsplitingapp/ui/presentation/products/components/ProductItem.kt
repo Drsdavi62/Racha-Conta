@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.ui.components.IconButtonText
 import com.example.application.billsplitingapp.ui.components.IconText
-import com.example.application.billsplitingapp.ui.theme.MoneyGreen
+import com.example.application.billsplitingapp.ui.theme.moneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -163,7 +163,7 @@ fun ProductItem(
                             text = Formatter.currencyFormatFromFloat(product.value * product.amount),
                             style = MaterialTheme.typography.body1,
                             fontWeight = FontWeight.Bold,
-                            color = MoneyGreen
+                            color = MaterialTheme.colors.moneyGreen
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         IconText(
@@ -209,12 +209,12 @@ fun ProductItem(
                                 text = Formatter.currencyFormatFromFloat(fullValue),
                                 style = MaterialTheme.typography.h6,
                                 fontWeight = FontWeight.Bold,
-                                color = MoneyGreen
+                                color = MaterialTheme.colors.moneyGreen
                             )
                             Text(
                                 text = Formatter.currencyFormatFromFloat(product.value) + " cada",
                                 style = MaterialTheme.typography.caption,
-                                color = MoneyGreen
+                                color = MaterialTheme.colors.moneyGreen
                             )
                         }
                     }

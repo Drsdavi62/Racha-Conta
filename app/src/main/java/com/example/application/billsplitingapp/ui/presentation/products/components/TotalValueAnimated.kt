@@ -1,11 +1,12 @@
 package com.example.application.billsplitingapp.ui.presentation.products.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
-import com.example.application.billsplitingapp.ui.theme.MoneyGreen
+import com.example.application.billsplitingapp.ui.theme.moneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
 
 @Composable
@@ -16,7 +17,7 @@ fun TotalValueAnimated(
     val fontSize by animateFloatAsState(
         if (triggered) 18f else 14f,
     )
-    Text("Total: $value", color = MoneyGreen, fontSize = fontSize.sp)
+    Text("Total: $value", color = MaterialTheme.colors.moneyGreen, fontSize = fontSize.sp)
 }
 
 @Composable

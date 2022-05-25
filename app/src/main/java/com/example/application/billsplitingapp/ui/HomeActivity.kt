@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.application.billsplitingapp.R
-import com.example.application.billsplitingapp.ui.Screen
 import com.example.application.billsplitingapp.ui.presentation.bill.BillScreen
 import com.example.application.billsplitingapp.ui.presentation.history.HistoryScreen
 import com.example.application.billsplitingapp.ui.presentation.homeFragment.HomeScreen
@@ -23,7 +22,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
 
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         setContent {
             BillSplitingAppTheme {
