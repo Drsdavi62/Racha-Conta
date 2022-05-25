@@ -39,25 +39,27 @@ fun SwipeToDeleteBackground(
         DismissDirection.EndToStart -> Alignment.CenterEnd
     }
     val icon = when (direction) {
-        DismissDirection.StartToEnd -> Icons.Default.Done
+        DismissDirection.StartToEnd -> null
         DismissDirection.EndToStart -> Icons.Default.Delete
     }
     val scale by animateFloatAsState(
         if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
     )
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(color)
-            .padding(horizontal = 20.dp),
-        contentAlignment = alignment
-    ) {
-        Icon(
-            icon,
-            contentDescription = "Localized description",
-            modifier = Modifier.scale(scale).size(30.dp),
-            tint = if (dismissState.targetValue == DismissValue.Default) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background
-        )
+    icon?.let { ic ->
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(color)
+                .padding(horizontal = 20.dp),
+            contentAlignment = alignment
+        ) {
+            Icon(
+                ic,
+                contentDescription = "Localized description",
+                modifier = Modifier.scale(scale).size(30.dp),
+                tint = if (dismissState.targetValue == DismissValue.Default) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background
+            )
+        }
     }
 }

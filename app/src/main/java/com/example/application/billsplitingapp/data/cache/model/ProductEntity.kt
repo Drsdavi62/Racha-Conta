@@ -27,12 +27,7 @@ data class ProductEntity(
     var name: String,
     var value: Float,
     var amount: Int,
-
-    @Ignore
-    var people: List<PersonEntity>? = null
-) {
-    constructor(id: Int, billId: Int, name: String, value: Float, amount: Int): this(id, billId, name, value, amount, null)
-}
+)
 
 fun ProductEntity.toProduct(): Product {
     return Product(
@@ -41,7 +36,7 @@ fun ProductEntity.toProduct(): Product {
         name = name,
         value = value,
         amount = amount,
-        people = people?.map { it.toPerson() } ?: emptyList()
+        people = emptyList()
     )
 }
 
@@ -51,7 +46,6 @@ fun Product.toProductEntity(): ProductEntity {
         billId = billId,
         name = name,
         value = value,
-        amount = amount,
-        people = people.map { it.toPersonEntity() }
+        amount = amount
     )
 }

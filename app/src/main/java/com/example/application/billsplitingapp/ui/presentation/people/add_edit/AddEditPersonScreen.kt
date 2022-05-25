@@ -1,11 +1,8 @@
-package com.example.application.billsplitingapp.ui.presentation.products.add_edit
+package com.example.application.billsplitingapp.ui.presentation.people.add_edit
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,15 +14,9 @@ import androidx.compose.material.icons.filled.RemoveDone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -40,26 +31,18 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddEditProductScreen(
+fun AddEditPersonScreen(
     navController: NavController,
     viewModel: AddEditProductViewModel = hiltViewModel()
 ) {
 
     val name = viewModel.name.value
 
-    val amount = viewModel.amount.value
-
-    val value = viewModel.value.value
-
     val isEditing = viewModel.isEditing.value
 
-    val isTotalBig = remember {
-        mutableStateOf(false)
-    }
+    val products = viewModel.products.value
 
-    val people = viewModel.people.value
-
-    var selectedPeople = viewModel.selectedPeople
+    var selectedProducts = viewModel.selectedProducts
 
     val composableScope = rememberCoroutineScope()
 
@@ -68,10 +51,10 @@ fun AddEditProductScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                AddEditProductViewModel.UIEvents.SuccessSavingProduct -> {
+                AddEditProductViewModel.UIEvents.SuccessSavingPerson -> {
                     navController.navigateUp()
                 }
-                AddEditProductViewModel.UIEvents.ErrorSavingProduct -> {
+                AddEditProductViewModel.UIEvents.ErrorSavingPerson -> {
 
                 }
             }
@@ -85,75 +68,34 @@ fun AddEditProductScreen(
     ) {
         Column(Modifier.fillMaxHeight(.9f)) {
 
-            Text(text = "Produto", style = MaterialTheme.typography.h6)
+            Text(text = "Nome", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = name,
-                onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredName(it)) },
+                onValueChange = { viewModel.onEvent(AddEditPersonEvents.EnteredName(it)) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(10.dp),
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.fillMaxWidth(.48f)) {
-                    Text(text = "Valor Unitário", style = MaterialTheme.typography.h6)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = value,
-                        onValueChange = { viewModel.onEvent(AddEditProductEvents.EnteredValue(it.text)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = MaterialTheme.colors.primary),
-                        shape = RoundedCornerShape(10.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    TotalValueAnimated(value = viewModel.fullValue, triggered = isTotalBig.value)
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Quantidade", style = MaterialTheme.typography.h6)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    HorizontalAmountSelector(
-                        amount = amount,
-                        onAmountChange = {
-                            viewModel.onEvent(AddEditProductEvents.ChangedAmount(it))
-                            composableScope.launch {
-                                isTotalBig.value = true
-                                delay(250)
-                                isTotalBig.value = false
-                            }
-                        })
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Column(Modifier.fillMaxWidth()) {
-
-            }
-
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    text = "Quem irá dividir esse produto?",
+                    text = "Selecione os produtos",
                     style = MaterialTheme.typography.h6,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
                     onClick = {
-                        viewModel.onEvent(AddEditProductEvents.ToggleAllPeople)
+                        viewModel.onEvent(AddEditPersonEvents.ToggleAllProducts)
                     }
                 ) {
                     Icon(
-                        imageVector = if (selectedPeople.size == people.size) Icons.Default.RemoveDone else Icons.Default.DoneAll,
+                        imageVector = if (selectedProducts.size == products.size) Icons.Default.RemoveDone else Icons.Default.DoneAll,
                         contentDescription = "Select all",
                         tint = MaterialTheme.colors.secondary
                     )
@@ -168,12 +110,12 @@ fun AddEditProductScreen(
                         listTotalHeight = maxHeight
                     )
                 ) {
-                    items(people) { person ->
+                    items(products) { product ->
                         CheckboxItem(
-                            checked = selectedPeople.contains(person),
-                            text = person.name
+                            checked = selectedProducts.contains(product),
+                            text = product.name
                         ) {
-                            viewModel.onEvent(AddEditProductEvents.ToggledPersonSelection(person))
+                            viewModel.onEvent(AddEditPersonEvents.ToggledProductSelection(product))
                         }
                     }
                 }
@@ -206,7 +148,7 @@ fun AddEditProductScreen(
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(
-                onClick = { viewModel.onEvent(AddEditProductEvents.SaveProduct) },
+                onClick = { viewModel.onEvent(AddEditPersonEvents.SavePerson) },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
                     disabledBackgroundColor = DisabledGray
@@ -214,7 +156,7 @@ fun AddEditProductScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(),
-                enabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f
+                enabled = name.isNotEmpty()
             ) {
                 Text(
                     text = if (isEditing) "Salvar" else "Adicionar",

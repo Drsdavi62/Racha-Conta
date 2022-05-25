@@ -28,7 +28,8 @@ fun PersonEntity.toPerson(): Person {
     return Person(
         id = id,
         billId = billId,
-        name = name
+        name = name,
+        products = emptyList()
     )
 }
 

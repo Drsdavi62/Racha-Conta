@@ -1,12 +1,11 @@
 package com.example.application.billsplitingapp.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -14,6 +13,10 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Bill
@@ -34,11 +37,15 @@ fun HistoryCardItem(
         onLongPress(!isSelected, bill)
     }
 
-    Card(
+    Surface(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .shadow(
+                elevation = 3.dp,
+                shape = RoundedCornerShape(20.dp)
+            )
             .clip(RoundedCornerShape(20.dp))
             .combinedClickable(
                 onClick = {
@@ -52,8 +59,8 @@ fun HistoryCardItem(
                     longClick(bill)
                 }
             ),
-        border = BorderStroke(2.dp, MaterialTheme.colors.primary),
-        backgroundColor = if (isSelected) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background
+        color = if (isSelected) MaterialTheme.colors.primaryVariant else Color(0xFFFFFFFF),
+        elevation = 200.dp
     ) {
         Column(
             modifier = Modifier
@@ -83,12 +90,15 @@ fun HistoryCardItem(
                 IconText(
                     icon = Icons.Filled.People,
                     text = bill.people.map { it.name }.joinToString(", "),
-                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant,
+                    modifier = Modifier.fillMaxWidth(.60f)
                 )
                 IconText(
                     icon = Icons.Filled.DateRange,
                     text = bill.date,
-                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant
+                    iconTint = if (isSelected) MaterialTheme.colors.background else MaterialTheme.colors.primaryVariant,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 )
             }
         }

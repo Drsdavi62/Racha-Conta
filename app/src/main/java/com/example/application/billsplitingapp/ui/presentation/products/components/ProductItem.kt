@@ -8,6 +8,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.ui.components.IconButtonText
+import com.example.application.billsplitingapp.ui.components.IconText
 import com.example.application.billsplitingapp.ui.theme.MoneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
 
@@ -150,12 +152,27 @@ fun ProductItem(
                     modifier = Modifier
                         .wrapContentWidth(Alignment.End)
                 ) {
-                    Text(
-                        text = Formatter.currencyFormatFromFloat(product.value * product.amount),
-                        style = MaterialTheme.typography.body1,
-                        fontWeight = FontWeight.Bold,
-                        color = MoneyGreen
-                    )
+                    Column(
+                        Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(text = "")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = Formatter.currencyFormatFromFloat(product.value * product.amount),
+                            style = MaterialTheme.typography.body1,
+                            fontWeight = FontWeight.Bold,
+                            color = MoneyGreen
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        IconText(
+                            icon = Icons.Default.Group,
+                            text = product.people.size.toString(),
+                            textColor = MaterialTheme.colors.primaryVariant,
+                        )
+                    }
+
                 }
             }
 

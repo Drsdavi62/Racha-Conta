@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.ui.presentation.products.add_edit
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -9,12 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.domain.model.Product
-import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
-import com.example.application.billsplitingapp.domain.use_case.bill.UpdateBillValue
+import com.example.application.billsplitingapp.domain.use_case.people.GetPeopleListFromBill
 import com.example.application.billsplitingapp.domain.use_case.product.ChangeValueTextField
 import com.example.application.billsplitingapp.domain.use_case.product.GetProduct
+import com.example.application.billsplitingapp.domain.use_case.product.InsertProduct
 import com.example.application.billsplitingapp.utils.Constants
 import com.example.application.billsplitingapp.utils.Formatter
+import com.example.application.billsplitingapp.utils.addAllDistinct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -26,7 +28,8 @@ class AddEditProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val insertProductUseCase: InsertProduct,
     private val getProduct: GetProduct,
-    private val changeValueTextField: ChangeValueTextField
+    private val changeValueTextField: ChangeValueTextField,
+    getPeopleListFromBill: GetPeopleListFromBill
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UIEvents>()
@@ -44,6 +47,11 @@ class AddEditProductViewModel @Inject constructor(
     private val _isEditing = mutableStateOf<Boolean>(false)
     val isEditing: State<Boolean> = _isEditing
 
+    private val _people = mutableStateOf<List<Person>>(emptyList())
+    val people: State<List<Person>> = _people
+
+    val selectedPeople = mutableStateListOf<Person>()
+
     private var currentProductId: Int? = null
 
     val fullValue: Float
@@ -56,17 +64,20 @@ class AddEditProductViewModel @Inject constructor(
             this.billId = billId
         }
         savedStateHandle.get<Int>("productId")?.let { productId ->
-            if (productId != -1) {
-                viewModelScope.launch {
+            viewModelScope.launch {
+                if (productId != -1) {
                     getProduct(productId)?.also { product ->
                         currentProductId = productId
                         _name.value = product.name
                         val valueFormatted = Formatter.currencyFormatFromFloat(product.value)
-                        _value.value = TextFieldValue(valueFormatted, TextRange(valueFormatted.length))
+                        _value.value =
+                            TextFieldValue(valueFormatted, TextRange(valueFormatted.length))
                         _amount.value = product.amount
+                        selectedPeople.addAll(product.people)
                         _isEditing.value = true
                     }
                 }
+                _people.value = getPeopleListFromBill(billId)
             }
         }
     }
@@ -80,7 +91,7 @@ class AddEditProductViewModel @Inject constructor(
                     name = _name.value,
                     value = Formatter.currencyFormatFromString(_value.value.text),
                     amount = _amount.value,
-                    people = emptyList()
+                    people = selectedPeople
                 )
             )
             _eventFlow.emit(UIEvents.SuccessSavingProduct)
@@ -102,11 +113,29 @@ class AddEditProductViewModel @Inject constructor(
             AddEditProductEvents.SaveProduct -> {
                 insertProduct()
             }
+            is AddEditProductEvents.ToggledPersonSelection -> {
+                selectedPeople.toggle(event.person)
+            }
+            AddEditProductEvents.ToggleAllPeople -> {
+                if (selectedPeople.size == people.value.size) {
+                    selectedPeople.clear()
+                } else {
+                    selectedPeople.addAllDistinct(people.value)
+                }
+            }
         }
     }
 
     sealed class UIEvents {
-        object SuccessSavingProduct: UIEvents()
-        object ErrorSavingProduct: UIEvents()
+        object SuccessSavingProduct : UIEvents()
+        object ErrorSavingProduct : UIEvents()
+    }
+}
+
+fun <T> MutableList<T>.toggle(item: T) {
+    if (contains(item)) {
+        remove(item)
+    } else {
+        add(item)
     }
 }

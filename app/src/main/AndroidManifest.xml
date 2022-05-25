@@ -14,7 +14,7 @@
             android:name=".ui.HomeActivity"
             android:exported="true"
             android:theme="@style/splashScreen"
-            android:windowSoftInputMode="adjustPan|adjustResize">
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
