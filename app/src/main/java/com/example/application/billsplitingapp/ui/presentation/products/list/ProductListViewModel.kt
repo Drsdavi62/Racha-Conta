@@ -53,6 +53,13 @@ class ProductListViewModel @Inject constructor(
                     )
                 }
             }
+            is ProductListEvents.DeleteMultipleProducts -> {
+                viewModelScope.launch {
+                    event.products.forEach { product: Product ->
+                        deleteProduct(product)
+                    }
+                }
+            }
         }
     }
 

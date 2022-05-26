@@ -2,7 +2,9 @@ package com.example.application.billsplitingapp.ui.presentation.products.compone
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -20,13 +22,14 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.ui.components.IconButtonText
 import com.example.application.billsplitingapp.ui.components.IconText
 import com.example.application.billsplitingapp.ui.theme.moneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ProductItem(
     product: Product,
@@ -34,7 +37,10 @@ fun ProductItem(
     isLast: Boolean,
     onPlusAmountClick: (Int, Int) -> Unit,
     onMinusAmountClick: (Int, Int) -> Unit,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    selectionMode: Boolean,
+    isSelected: Boolean,
+    onLongPress: (Boolean, Product) -> Unit
 ) {
 
     val tickAmount = 34
@@ -43,12 +49,17 @@ fun ProductItem(
 
     val fullValue by lazy { product.value * product.amount }
 
+    val longClick: (Product) -> Unit = { bill ->
+        onLongPress(!isSelected, bill)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
 
-        val color = MaterialTheme.colors.primary
+        val color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
+        val alpha = if (isSelected) 1.0f else 0.3f
 
         Canvas(modifier = Modifier
             .matchParentSize()
@@ -90,7 +101,7 @@ fun ProductItem(
             clipPath(clipPath) {
                 drawRoundRect(
                     color = color,
-                    alpha = 0.3f,
+                    alpha = alpha,
                     size = size,
                 )
             }
@@ -99,6 +110,16 @@ fun ProductItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(end = 8.dp)
+                .combinedClickable(
+                    onClick = {
+                        if (selectionMode) {
+                            longClick(product)
+                        }
+                    },
+                    onLongClick = {
+                        longClick(product)
+                    }
+                )
         ) {
             Row(
                 modifier = Modifier
