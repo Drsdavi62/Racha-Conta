@@ -94,6 +94,8 @@ fun ProductItem(
                     onClick = {
                         if (selectionMode) {
                             longClick(product)
+                        } else {
+                            isExpanded.value = !isExpanded.value
                         }
                     },
                     onLongClick = {

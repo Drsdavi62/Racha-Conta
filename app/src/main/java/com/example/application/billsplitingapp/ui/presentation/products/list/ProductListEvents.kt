@@ -6,5 +6,6 @@ sealed class ProductListEvents {
     data class LoadProducts(val billId: Int): ProductListEvents()
     data class DeleteProduct(val product: Product): ProductListEvents()
     data class DeleteMultipleProducts(val products: List<Product>): ProductListEvents()
+    object UndoDelete: ProductListEvents()
     data class ChangeAmount(val id: Int, val amount: Int): ProductListEvents()
 }
