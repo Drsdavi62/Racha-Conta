@@ -22,12 +22,12 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.application.billsplitingapp.domain.model.Bill
 import com.example.application.billsplitingapp.domain.model.Product
 import com.example.application.billsplitingapp.ui.components.IconButtonText
 import com.example.application.billsplitingapp.ui.components.IconText
 import com.example.application.billsplitingapp.ui.theme.moneyGreen
 import com.example.application.billsplitingapp.utils.Formatter
+import com.example.application.billsplitingapp.utils.createTicketClipPath
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -69,34 +69,14 @@ fun ProductItem(
 
             val tickHeight = 10.dp.toPx()
 
-            val clipPath = Path().apply {
-                lineTo(0f, size.height)
-                if (isLast && !isFirst) {
-                    lineTo(size.width, size.height)
-                } else {
-                    for (i in 1..tickAmount) {
-                        if (i % 2 != 0) {
-                            lineTo(i * (size.width / tickAmount), size.height - tickHeight)
-                        } else {
-                            lineTo(i * (size.width / tickAmount), size.height)
-                        }
-                    }
-                }
-                if (isFirst && !isLast) {
-                    lineTo(size.width, 0f)
-                    close()
-                } else {
-                    lineTo(size.width, tickHeight)
-                    for (i in tickAmount - 1 downTo 1) {
-                        if (i % 2 != 0) {
-                            lineTo(i * (size.width / tickAmount), 0f)
-                        } else {
-                            lineTo(i * (size.width / tickAmount), tickHeight)
-                        }
-                    }
-                    lineTo(0f, tickHeight)
-                }
-            }
+            val clipPath = Path().createTicketClipPath(
+                width = size.width,
+                height = size.height,
+                tickHeight = tickHeight,
+                tickAmount = tickAmount,
+                isFirst = isFirst,
+                isLast = isLast
+            )
 
             clipPath(clipPath) {
                 drawRoundRect(
