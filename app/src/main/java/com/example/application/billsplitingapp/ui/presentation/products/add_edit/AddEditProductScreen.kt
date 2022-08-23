@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.application.billsplitingapp.ui.components.AddEditButtonRow
 import com.example.application.billsplitingapp.ui.components.simpleVerticalScrollbar
 import com.example.application.billsplitingapp.ui.presentation.products.components.CheckboxItem
 import com.example.application.billsplitingapp.ui.presentation.products.components.HorizontalAmountSelector
@@ -83,7 +84,7 @@ fun AddEditProductScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(Modifier.fillMaxHeight(.9f)) {
+        Column(Modifier.weight(1f, false)) {
 
             Text(text = "Produto", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
@@ -182,47 +183,11 @@ fun AddEditProductScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            OutlinedButton(
-                onClick = { navController.navigateUp() },
-                border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.background),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(.5f)
-            ) {
-                Text(
-                    text = "Cancelar",
-                    color = MaterialTheme.colors.secondary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h6
-                )
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = { viewModel.onEvent(AddEditProductEvents.SaveProduct) },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    disabledBackgroundColor = DisabledGray
-                ),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                enabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f
-            ) {
-                Text(
-                    text = if (isEditing) "Salvar" else "Adicionar",
-                    color = MaterialTheme.colors.onSecondary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h6
-                )
-            }
-        }
+        AddEditButtonRow(
+            isSaveEnabled = name.isNotEmpty() && Formatter.currencyFormatFromString(value.text) > 0f,
+            isEditing = isEditing,
+            onCancelClick = { navController.navigateUp() },
+            onSaveClick = { viewModel.onEvent(AddEditProductEvents.SaveProduct) }
+        )
     }
 }

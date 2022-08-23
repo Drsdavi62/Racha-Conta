@@ -1,6 +1,7 @@
 package com.example.application.billsplitingapp.ui.presentation.people.add_edit
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,12 +15,14 @@ import androidx.compose.material.icons.filled.RemoveDone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.application.billsplitingapp.ui.components.AddEditButtonRow
 import com.example.application.billsplitingapp.ui.components.simpleVerticalScrollbar
 import com.example.application.billsplitingapp.ui.presentation.products.components.CheckboxItem
 import com.example.application.billsplitingapp.ui.presentation.products.components.HorizontalAmountSelector
@@ -66,7 +69,7 @@ fun AddEditPersonScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(Modifier.fillMaxHeight(.9f)) {
+        Column(Modifier.weight(1f, false)) {
 
             Text(text = "Nome", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
@@ -124,47 +127,15 @@ fun AddEditPersonScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            OutlinedButton(
-                onClick = { navController.navigateUp() },
-                border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.background),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(.5f)
-            ) {
-                Text(
-                    text = "Cancelar",
-                    color = MaterialTheme.colors.secondary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h6
-                )
+        AddEditButtonRow(
+            isSaveEnabled = name.isNotEmpty(),
+            isEditing = isEditing,
+            onCancelClick = {
+                navController.navigateUp()
+            },
+            onSaveClick = {
+                viewModel.onEvent(AddEditPersonEvents.SavePerson)
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = { viewModel.onEvent(AddEditPersonEvents.SavePerson) },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    disabledBackgroundColor = DisabledGray
-                ),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                enabled = name.isNotEmpty()
-            ) {
-                Text(
-                    text = if (isEditing) "Salvar" else "Adicionar",
-                    color = MaterialTheme.colors.onSecondary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h6
-                )
-            }
-        }
+        )
     }
 }
