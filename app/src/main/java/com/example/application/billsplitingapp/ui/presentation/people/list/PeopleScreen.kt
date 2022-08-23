@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.application.billsplitingapp.domain.model.Person
 import com.example.application.billsplitingapp.ui.components.SwipeToDeleteBackground
+import com.example.application.billsplitingapp.ui.components.SwipeToDeleteList
 import com.example.application.billsplitingapp.ui.presentation.bill.PeopleScreens
 import com.example.application.billsplitingapp.ui.presentation.people.components.PersonItem
 
@@ -41,52 +42,31 @@ fun PeopleScreen(
         color = MaterialTheme.colors.primary.copy(alpha = .3f),
         shape = RoundedCornerShape(20.dp)
     ) {
-        LazyColumn() {
-            itemsIndexed(
-                people,
-                key = {_, person: Person -> person.id}
-            ) { index, person ->
-                val dismissState = rememberDismissState(
-                    confirmStateChange = {
-                        if (it == DismissValue.DismissedToStart) {
-                            viewModel.deletePerson(person)
-                        }
-                        it != DismissValue.DismissedToStart
-                    }
-                )
-                SwipeToDismiss(
-                    state = dismissState,
-                    directions = setOf(
-                        DismissDirection.EndToStart
-                    ),
-                    dismissThresholds = { direction ->
-                        FractionalThreshold(if (direction == DismissDirection.StartToEnd) 0.25f else 0.5f)
-                    },
-                    background = {
-                        SwipeToDeleteBackground(dismissState = dismissState)
-                    },
-                    dismissContent = {
-                        Column {
-                            PersonItem(person = person, onEditClick = {
-                                navController.navigate(PeopleScreens.AddEditPersonScreen.route + "/?billId=${billId}&personId=${person.id}")
-                            })
+        SwipeToDeleteList(
+            list = people,
+            key = {_, person: Person -> person.id},
+            onDeleteBySwipe = { person ->
+                viewModel.deletePerson(person)
+            }
+        ) { index: Int, person: Person ->
+            Column {
+                PersonItem(person = person, onEditClick = {
+                    navController.navigate(PeopleScreens.AddEditPersonScreen.route + "/?billId=${billId}&personId=${person.id}")
+                })
 
-                            if (index < people.lastIndex) {
-                                val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-                                Canvas(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(1.dp)) {
-                                    drawLine(
-                                        color = Color.Black,
-                                        start = Offset(0f, 0f),
-                                        end = Offset(size.width, 0f),
-                                        pathEffect = pathEffect
-                                    )
-                                }
-                            }
-                        }
+                if (index < people.lastIndex) {
+                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                    Canvas(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)) {
+                        drawLine(
+                            color = Color.Black,
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            pathEffect = pathEffect
+                        )
                     }
-                )
+                }
             }
         }
     }
