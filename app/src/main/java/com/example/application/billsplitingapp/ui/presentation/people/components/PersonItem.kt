@@ -1,13 +1,16 @@
 package com.example.application.billsplitingapp.ui.presentation.people.components
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +31,8 @@ import com.example.application.billsplitingapp.utils.Formatter
 @Composable
 fun PersonItem(
     person: Person,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
 
     val isExpanded = remember { mutableStateOf(false) }
@@ -47,24 +51,27 @@ fun PersonItem(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
         ) {
             Text(
                 text = person.name,
                 style = MaterialTheme.typography.h6,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.weight(1f)
             )
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.End
+            Spacer(modifier = Modifier.width(8.dp))
+            AnimatedVisibility(
+                visible = !isExpanded.value,
+                enter = expandHorizontally(),
+                exit = shrinkHorizontally(
+                    animationSpec = snap()
+                ),
+                modifier = Modifier
+                    .wrapContentWidth(Alignment.End)
             ) {
-                AnimatedVisibility(
-                    visible = !isExpanded.value,
-                    enter = expandHorizontally(),
-                    exit = shrinkHorizontally(),
-                    modifier = Modifier
-                        .wrapContentWidth(Alignment.End)
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.End
                 ) {
                     Text(
                         text = Formatter.currencyFormatFromFloat(person.value),
@@ -72,9 +79,6 @@ fun PersonItem(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colors.moneyGreen
                     )
-
-                }
-                if (!isExpanded.value) {
                     Spacer(modifier = Modifier.height(16.dp))
                     IconText(
                         icon = Icons.Default.LunchDining,
@@ -83,7 +87,20 @@ fun PersonItem(
                     )
                 }
             }
-
+            AnimatedVisibility(
+                visible = isExpanded.value,
+                enter = expandHorizontally(),
+                exit = shrinkHorizontally(),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Excluir pessoa",
+                    tint = MaterialTheme.colors.secondary,
+                    modifier = Modifier.clickable {
+                        onDeleteClick()
+                    }
+                )
+            }
         }
 
         AnimatedVisibility(
@@ -98,10 +115,16 @@ fun PersonItem(
             ) {
                 person.products.forEach { product ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(start = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "• " + product.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(
+                            text = "• " + product.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                         Text(
                             text = Formatter.currencyFormatFromFloat(product.value),
                             textAlign = TextAlign.End,

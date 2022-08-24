@@ -1,22 +1,20 @@
 package com.example.application.billsplitingapp.ui.presentation.products.components
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.font.FontWeight
@@ -38,9 +36,7 @@ fun ProductItem(
     onPlusAmountClick: (Int, Int) -> Unit,
     onMinusAmountClick: (Int, Int) -> Unit,
     onEditClick: () -> Unit,
-    selectionMode: Boolean,
-    isSelected: Boolean,
-    onLongPress: (Boolean, Product) -> Unit
+    onDeleteClick: () -> Unit,
 ) {
 
     val tickAmount = 34
@@ -49,17 +45,13 @@ fun ProductItem(
 
     val fullValue by lazy { product.value * product.amount }
 
-    val longClick: (Product) -> Unit = { bill ->
-        onLongPress(!isSelected, bill)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
 
-        val color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
-        val alpha = if (isSelected) 1.0f else 0.3f
+        val color = MaterialTheme.colors.primaryVariant
+        val alpha = 0.3f
 
         Canvas(modifier = Modifier
             .matchParentSize()
@@ -90,18 +82,9 @@ fun ProductItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(end = 8.dp)
-                .combinedClickable(
-                    onClick = {
-                        if (selectionMode) {
-                            longClick(product)
-                        } else {
-                            isExpanded.value = !isExpanded.value
-                        }
-                    },
-                    onLongClick = {
-                        longClick(product)
-                    }
-                )
+                .clickable {
+                    isExpanded.value = !isExpanded.value
+                }
         ) {
             Row(
                 modifier = Modifier
@@ -149,6 +132,21 @@ fun ProductItem(
                     }
                 }
                 AnimatedVisibility(
+                    visible = isExpanded.value,
+                    enter = expandHorizontally(),
+                    exit = shrinkHorizontally(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                ) {
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = "Excluir produto",
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+                }
+                AnimatedVisibility(
                     visible = !isExpanded.value,
                     enter = expandHorizontally(),
                     exit = shrinkHorizontally(),
@@ -175,7 +173,6 @@ fun ProductItem(
                             textColor = MaterialTheme.colors.primaryVariant,
                         )
                     }
-
                 }
             }
 

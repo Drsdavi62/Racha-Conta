@@ -44,6 +44,7 @@ class PeopleViewModel @Inject constructor(
         lastDeletedPerson?.let {
             viewModelScope.launch {
                 insertPerson(it)
+                lastDeletedPerson = null
             }
         }
     }

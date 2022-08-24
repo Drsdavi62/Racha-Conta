@@ -53,9 +53,15 @@ fun PeopleScreen(
                 onUndoDeletion = viewModel::undoDeletion,
             ) { index: Int, person: Person ->
                 Column {
-                    PersonItem(person = person, onEditClick = {
-                        navController.navigate(PeopleScreens.AddEditPersonScreen.route + "/?billId=${billId}&personId=${person.id}")
-                    })
+                    PersonItem(
+                        person = person,
+                        onEditClick = {
+                            navController.navigate(PeopleScreens.AddEditPersonScreen.route + "/?billId=${billId}&personId=${person.id}")
+                        },
+                        onDeleteClick = {
+                            viewModel.deletePerson(person)
+                        }
+                    )
 
                     if (index < people.lastIndex) {
                         val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)

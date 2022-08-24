@@ -76,6 +76,7 @@ class ProductListViewModel @Inject constructor(
                 lastDeletedProduct?.let {
                     viewModelScope.launch {
                         insertProduct(it)
+                        lastDeletedProduct = null
                     }
                 }
             }
