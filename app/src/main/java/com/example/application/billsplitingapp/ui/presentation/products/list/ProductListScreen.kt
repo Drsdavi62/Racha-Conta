@@ -1,8 +1,6 @@
 package com.example.application.billsplitingapp.ui.presentation.products.list
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarResult
@@ -52,7 +50,6 @@ fun ProductListScreen(
         }
     }
 
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -85,18 +82,12 @@ fun ProductListScreen(
             SwipeToDeleteList(
                 list = products,
                 key = { _, product: Product -> product.id },
+                scaffoldState = scaffoldState,
                 onDeleteBySwipe = { product ->
                     viewModel.onEvent(ProductListEvents.DeleteProduct(product))
-                    scope.launch {
-                        val result = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "${product.name} excluído",
-                            actionLabel = "Desfazer"
-                        )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.onEvent(ProductListEvents.UndoDelete)
-                        }
-                    }
-                }
+                },
+                itemNameOnSnackbar = { product -> product.name },
+                onUndoDeletion = { viewModel.onEvent(ProductListEvents.UndoDelete) },
             ) { index: Int, product: Product ->
                 ProductItem(
                     product = product,
@@ -127,7 +118,7 @@ fun ProductListScreen(
                         }
                     }
                 )
-
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
