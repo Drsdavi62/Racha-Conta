@@ -1,6 +1,5 @@
 package com.example.application.billsplitingapp.ui.presentation.homeFragment
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,15 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.preference.PreferenceManager
-import com.example.application.billsplitingapp.MainActivity
 import com.example.application.billsplitingapp.R
 import com.example.application.billsplitingapp.ui.Screen
-import com.example.application.billsplitingapp.ui.components.DarkModeToggle
 import com.example.application.billsplitingapp.ui.components.HomeBottomSheet
 import com.example.application.billsplitingapp.ui.components.HomeButton
 import com.example.application.billsplitingapp.ui.theme.NovaOvalRegular
-import com.example.application.billsplitingapp.utils.Constants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

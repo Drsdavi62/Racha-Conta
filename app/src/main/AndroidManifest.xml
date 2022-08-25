@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         android:name=".BillSplitApp">
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/splashScreen"
             android:windowSoftInputMode="adjustNothing">
@@ -21,12 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".allBills.AllBillsActivity"
-            android:theme="@style/splashScreen">
-
-        </activity>
-        <activity android:name=".MainActivity" android:theme="@style/AppThemeNotCompose"/>
     </application>
 
 </manifest>
