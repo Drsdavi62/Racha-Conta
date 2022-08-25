@@ -24,20 +24,12 @@ fun ProductListScreen(
     billId: Int
 ) {
 
-    viewModel.onEvent(ProductListEvents.LoadProducts(billId))
+    LaunchedEffect(key1 = billId) {
+        viewModel.onEvent(ProductListEvents.LoadProducts(billId))
+    }
 
     val products = viewModel.products.value
     val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest {
-            when (it) {
-                ProductListViewModel.UIEvents.DeletedProduct -> {
-
-                }
-            }
-        }
-    }
 
     Scaffold(
         modifier = Modifier

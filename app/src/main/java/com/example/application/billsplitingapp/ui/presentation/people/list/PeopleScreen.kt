@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -28,7 +29,9 @@ fun PeopleScreen(
     billId: Int
 ) {
 
-    viewModel.fetchPeople(billId)
+    LaunchedEffect(key1 = billId) {
+        viewModel.fetchPeople(billId)
+    }
 
     val people = viewModel.people.value
 
