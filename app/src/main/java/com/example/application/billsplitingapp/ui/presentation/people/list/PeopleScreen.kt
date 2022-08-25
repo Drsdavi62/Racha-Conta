@@ -37,7 +37,7 @@ fun PeopleScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
         scaffoldState = scaffoldState
     ) {
         Surface(
